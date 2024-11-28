@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom"
+import Baby from "./Baby"
 
 const UserView = ({ users }) => {
     const id = useParams().id
@@ -13,7 +14,7 @@ const UserView = ({ users }) => {
             <h1>{user.username}'s babies:</h1>
             <ul>
                 {user.babies.map(baby => 
-                    <li key={baby}>{baby}</li>
+                    <Baby key={baby} baby={baby} user={user} />
                 )}
             </ul>
         </div>
