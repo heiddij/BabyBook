@@ -15,7 +15,7 @@ UserBabies.init({
     allowNull: false,
     references: { model: 'users', key: 'id' },
   },
-  noteId: {
+  babyId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: { model: 'babies', key: 'id' },

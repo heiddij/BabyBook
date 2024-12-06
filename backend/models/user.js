@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize')
+const bcrypt = require('bcrypt');
 
 const { sequelize } = require('../util/db')
 
@@ -20,17 +21,28 @@ User.init({
     },
     username: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false
     },
+    passwordHash: {
+        type: DataTypes.STRING
+    },
     password: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.VIRTUAL,
+        set(value) {
+            // Hash the password and store it in passwordHash
+            this.setDataValue('password', value); // NOT NEEDED?
+            this.setDataValue('passwordHash', bcrypt.hashSync(value, 10));
+        }
     },
 }, {
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: 'user'
+    modelName: 'user',
+    defaultScope: {
+        attributes: { exclude: ['passwordHash'] },
+    },
 })
 
 module.exports = User

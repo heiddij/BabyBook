@@ -3,26 +3,24 @@ const express = require('express')
 const app = express()
 const { sequelize } = require('./util/db');
 
+const { PORT } = require('./util/config')
+const { connectToDatabase } = require('./util/db')
+
 const usersRouter = require('./controllers/users')
+const babiesRouter = require('./controllers/babies')
+const loginRouter = require('./controllers/login')
 
 app.use(express.json())
 
 app.use('/api/users', usersRouter)
+app.use('/api/babies', babiesRouter)
+app.use('/api/login', loginRouter)
 
 const start = async () => {
-    (async () => {
-        try {
-          await sequelize.authenticate();
-          console.log('Database connection successful.');
-        } catch (error) {
-          console.error('Unable to connect to the database:', error);
-        }
-    })();
-
-    const PORT = process.env.PORT || 3001
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`)
-    })
+  await connectToDatabase()
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })
 }
   
 start()
