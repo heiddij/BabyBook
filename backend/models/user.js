@@ -31,7 +31,6 @@ User.init({
         type: DataTypes.VIRTUAL,
         set(value) {
             // Hash the password and store it in passwordHash
-            this.setDataValue('password', value); // NOT NEEDED?
             this.setDataValue('passwordHash', bcrypt.hashSync(value, 10));
         }
     },

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { createBabyProfile } from '../reducers/babyReducer'
 
 const BabyForm = () => {
     const [firstName, setFirstName] = useState('')
@@ -18,7 +17,7 @@ const BabyForm = () => {
             birthDate: birthDate,
             birthPlace: birthPlace
         }
-        dispatch(createBabyProfile(baby))
+        //dispatch(createBabyProfile(baby))
     }
 
     return (

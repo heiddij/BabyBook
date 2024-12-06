@@ -1,7 +1,8 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const { sequelize } = require('./util/db');
+const { sequelize } = require('./util/db')
+const cors = require('cors')
 
 const { PORT } = require('./util/config')
 const { connectToDatabase } = require('./util/db')
@@ -10,6 +11,8 @@ const usersRouter = require('./controllers/users')
 const babiesRouter = require('./controllers/babies')
 const loginRouter = require('./controllers/login')
 
+
+app.use(cors())
 app.use(express.json())
 
 app.use('/api/users', usersRouter)
