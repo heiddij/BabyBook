@@ -26,7 +26,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LoginForm />} />
         <Route path="/" element={<UserList users={users} />} />
-        <Route path="/users/:id" element={<UserView users={users} babies={babies} />} />
+        <Route path="/users/:id" element={<UserView users={users} />} />
         <Route path="/users/:id/:babyId" element={<BabyView babies={babies} />} />
       </Routes>
     </div>

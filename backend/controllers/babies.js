@@ -1,9 +1,27 @@
 const router = require('express').Router()
+const jwt = require('jsonwebtoken')
 
-const { Baby } = require('../models')
+const { SECRET } = require('../util/config')
+const { Baby, User } = require('../models')
 
 const babyFinder = async (req, res, next) => {
     req.baby = await Baby.findByPk(req.params.id)
+    next()
+}
+
+const tokenExtractor = (req, res, next) => {
+    const authorization = req.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+      try {
+        console.log(authorization.substring(7))
+        req.decodedToken = jwt.verify(authorization.substring(7), SECRET)
+      } catch (error){
+        console.log(error)
+        return res.status(401).json({ error: 'token invalid' })
+      }
+    } else {
+      return res.status(401).json({ error: 'token missing' })
+    }
     next()
 }
 
@@ -20,9 +38,10 @@ if (req.baby) {
 }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', tokenExtractor, async (req, res) => {
     try {
-      const baby = await Baby.create(req.body)
+      const user = await User.findByPk(req.decodedToken.id)
+      const baby = await Baby.create({ ...req.body, userId: user.id })
       res.json(baby)
     } catch(error) {
       return res.status(400).json({ error })
