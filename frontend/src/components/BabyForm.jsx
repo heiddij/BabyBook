@@ -1,23 +1,41 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { createBaby } from '../reducers/babyReducer'
+import { setNotification } from '../reducers/notificationReducer'
+import { updateUserInStore } from '../reducers/usersReducer'
 
-const BabyForm = () => {
+const BabyForm = ( { user }) => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [birthDate, setBirthDate] = useState('')
-    const [birthPlace, setBirthPlace] = useState('')
-
+    const [birthDate, setBirthdate] = useState('')
+    const [birthPlace, setBirthplace] = useState('')
     const dispatch = useDispatch()
 
     const addBaby = (event) => {
         event.preventDefault()
-        const baby = {
-            firstName: firstName,
-            lastName: lastName,
-            birthDate: birthDate,
-            birthPlace: birthPlace
+
+        const newBaby = {
+            firstname: firstName,
+            lastname: lastName,
+            birthdate: birthDate,
+            birthplace: birthPlace
         }
-        //dispatch(createBabyProfile(baby))
+
+        const updatedUser = { ...user, babies: [...user.babies, newBaby] };
+        
+        dispatch(createBaby(newBaby))
+        dispatch(updateUserInStore(updatedUser));
+        dispatch(
+            setNotification(
+              `Vauva ${newBaby.firstname} lisätty!`,
+              5
+            )
+        )
+
+        setFirstName('')
+        setLastName('')
+        setBirthdate('')
+        setBirthplace('')
     }
 
     return (
@@ -50,7 +68,7 @@ const BabyForm = () => {
                     type="text"
                     value={birthDate}
                     name="BirthDate"
-                    onChange={({ target }) => setBirthDate(target.value)}
+                    onChange={({ target }) => setBirthdate(target.value)}
                     id="birthDate"
                     />
                 </div>
@@ -60,7 +78,7 @@ const BabyForm = () => {
                     type="text"
                     value={birthPlace}
                     name="BirthPlace"
-                    onChange={({ target }) => setBirthPlace(target.value)}
+                    onChange={({ target }) => setBirthplace(target.value)}
                     id="birthPlace"
                     />
                 </div>

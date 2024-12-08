@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux"
 import { passUser } from '../reducers/userReducer'
 import babyService from '../services/babies'
 import { setNotification } from '../reducers/notificationReducer'
-import Notification from "./Notification"
 
 const LoginForm = () => {
     const [username, setUsername] = useState('')
@@ -42,28 +41,27 @@ const LoginForm = () => {
     return (
       <div>
       <h2>Kirjaudu sisään</h2>
-      <Notification />
-        <form onSubmit={handleLogin}>
-            <div>
-            Käyttäjänimi:
-                <input
-                type="text"
-                value={username}
-                name="Username"
-                onChange={({ target }) => setUsername(target.value)}
-            />
-            </div>
-            <div>
-            Salasana:
-                <input
-                type="password"
-                value={password}
-                name="Password"
-                onChange={({ target }) => setPassword(target.value)}
-            />
-            </div>
-            <button type="submit">Kirjaudu</button>
-        </form>
+      <form onSubmit={handleLogin}>
+          <div>
+          Käyttäjänimi:
+              <input
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)}
+          />
+          </div>
+          <div>
+          Salasana:
+              <input
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)}
+          />
+          </div>
+          <button type="submit">Kirjaudu</button>
+      </form>
       </div>
     )
 }

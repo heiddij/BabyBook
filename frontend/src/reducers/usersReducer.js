@@ -7,11 +7,15 @@ const usersSlice = createSlice({
   reducers: {
     setUsers(state, action) {
       return action.payload
-    }
+    },
+    updateUser(state, action) {
+      const updatedUser = action.payload;
+      return state.map((user) => (user.id === updatedUser.id ? updatedUser : user));
+    },
   }
 })
 
-export const { setUsers } = usersSlice.actions
+export const { setUsers, updateUser } = usersSlice.actions
 
 export const initializeUsers = () => {
   return async (dispatch) => {
@@ -19,5 +23,11 @@ export const initializeUsers = () => {
     dispatch(setUsers(users))
   }
 }
+
+export const updateUserInStore = (updatedUser) => {
+  return async (dispatch) => {
+    dispatch(updateUser(updatedUser));
+  };
+};
 
 export default usersSlice.reducer
