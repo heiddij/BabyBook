@@ -8,10 +8,6 @@ const usersSlice = createSlice({
     setUsers(state, action) {
       return action.payload
     },
-    updateUser(state, action) {
-      const updatedUser = action.payload;
-      return state.map((user) => (user.id === updatedUser.id ? updatedUser : user));
-    },
   }
 })
 
@@ -23,11 +19,5 @@ export const initializeUsers = () => {
     dispatch(setUsers(users))
   }
 }
-
-export const updateUserInStore = (updatedUser) => {
-  return async (dispatch) => {
-    dispatch(updateUser(updatedUser));
-  };
-};
 
 export default usersSlice.reducer

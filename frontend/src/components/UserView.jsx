@@ -7,8 +7,8 @@ const UserView = () => {
     const id = useParams().id
     const users = useSelector((state) => state.users);
     const user = users.find((u) => u.id === Number(id))
-    console.log(user)
-    const userBabies = user.babies
+    const babies = useSelector((state) => state.babies)
+    const userBabies = babies.filter((b) => b.userId === user.id)
 
     if (!user) {
         return null
@@ -20,7 +20,7 @@ const UserView = () => {
             {userBabies.length > 0 ? (
                 <ul>
                     {userBabies.map(baby => (
-                        <Baby baby={baby} user={user} />
+                        <Baby key={baby.id} baby={baby} user={user} />
                     ))}
                 </ul>
             ) : (

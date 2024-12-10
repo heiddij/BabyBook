@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { createBaby } from '../reducers/babyReducer'
 import { setNotification } from '../reducers/notificationReducer'
-import { updateUserInStore } from '../reducers/usersReducer'
 
-const BabyForm = ( { user }) => {
+const BabyForm = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [birthDate, setBirthdate] = useState('')
@@ -20,11 +19,8 @@ const BabyForm = ( { user }) => {
             birthdate: birthDate,
             birthplace: birthPlace
         }
-
-        const updatedUser = { ...user, babies: [...user.babies, newBaby] };
         
         dispatch(createBaby(newBaby))
-        dispatch(updateUserInStore(updatedUser));
         dispatch(
             setNotification(
               `Vauva ${newBaby.firstname} lisätty!`,

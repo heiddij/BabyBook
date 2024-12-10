@@ -26,8 +26,7 @@ export const initializeBabies = () => {
 export const createBaby = (babyObject) => {
     return async (dispatch) => {
       const newBaby = await babyService.create(babyObject)
-      const addedBaby = { ...newBaby, user: babyObject.user } // pois?
-      dispatch(appendBaby(addedBaby))
+      dispatch(appendBaby(newBaby))
     }
 }
 

@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
   
 
-const Baby = ({ baby, user }) => {
+const Baby = ({ baby, userId }) => {
     return (
         <li>
-            <Link key={baby.id} to={`/users/${user.id}/${baby.id}`}>{baby.firstname}</Link>
+            <Link to={`/users/${userId}/${baby.id}`}>{baby.firstname}</Link>
         </li>
     )
 }
