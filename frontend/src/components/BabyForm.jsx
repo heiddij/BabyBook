@@ -1,88 +1,61 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createBaby } from '../reducers/babyReducer'
-import { setNotification } from '../reducers/notificationReducer'
+import Input from './Input'
+import { useForm } from 'react-hook-form'
+import { FormProvider } from 'react-hook-form'
+import { GrMail } from 'react-icons/gr'
+import { firstname_validation, lastname_validation, birthdate_validation, birthplace_validation } from '../utils/inputValidations'
+import { BsFillCheckSquareFill } from 'react-icons/bs'
 
 const BabyForm = () => {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [birthDate, setBirthdate] = useState('')
-    const [birthPlace, setBirthplace] = useState('')
+    const methods = useForm()
     const dispatch = useDispatch()
+    const [success, setSuccess] = useState(false)
 
-    const addBaby = (event) => {
-        event.preventDefault()
-
-        const newBaby = {
-            firstname: firstName,
-            lastname: lastName,
-            birthdate: birthDate,
-            birthplace: birthPlace
-        }
-        
-        dispatch(createBaby(newBaby))
-        dispatch(
-            setNotification(
-              `Vauva ${newBaby.firstname} lisätty!`,
-              5
-            )
-        )
-
-        setFirstName('')
-        setLastName('')
-        setBirthdate('')
-        setBirthplace('')
-    }
+    const onSubmit = methods.handleSubmit(data => {
+      const newBaby = {
+        firstname: data.firstname,
+        lastname: data.lastname,
+        birthdate: data.birthdate,
+        birthplace: data.birthplace
+      }
+      dispatch(createBaby(newBaby))
+      methods.reset()
+      setSuccess(true)
+    })
 
     return (
-        <div>
-            <h2>Lisää vauva</h2>
-            <form onSubmit={addBaby}>
-                <div>
-                    Nimi:
-                    <input
-                    type="text"
-                    value={firstName}
-                    name="FirstName"
-                    onChange={({ target }) => setFirstName(target.value)}
-                    id="firstName"
-                    />
-                </div>
-                <div>
-                    Sukunimi:
-                    <input
-                    type="text"
-                    value={lastName}
-                    name="LastName"
-                    onChange={({ target }) => setLastName(target.value)}
-                    id="lastName"
-                    />
-                </div>
-                <div>
-                    Syntymäaika:
-                    <input
-                    type="text"
-                    value={birthDate}
-                    name="BirthDate"
-                    onChange={({ target }) => setBirthdate(target.value)}
-                    id="birthDate"
-                    />
-                </div>
-                <div>
-                    Syntymäpaikka:
-                    <input
-                    type="text"
-                    value={birthPlace}
-                    name="BirthPlace"
-                    onChange={({ target }) => setBirthplace(target.value)}
-                    id="birthPlace"
-                    />
-                </div>
-                <button id="submit-button" type="submit">
-                    Tallenna
-                </button>
-            </form>
-        </div>
+      <FormProvider {...methods}>
+        <h2>Lisää vauva</h2>
+        <form
+          onSubmit={e => e.preventDefault()}
+          noValidate
+          autoComplete="off"
+          className="container"
+        >
+          <div className="grid gap-5 md:grid-cols-2">
+            <Input {...firstname_validation} />
+            <Input {...lastname_validation} />
+            <Input {...birthdate_validation} />
+            <Input {...birthplace_validation} />
+          </div>
+          <div className="mt-5">
+            {success && (
+              <p className="flex items-center gap-1 mb-5 font-semibold text-green-500">
+                <BsFillCheckSquareFill /> Vauvan lisäys onnistui
+              </p>
+            )}
+            <button
+              onClick={onSubmit}
+              className="flex items-center gap-1 p-5 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-800"
+            >
+              <GrMail />
+              Tallenna
+            </button>
+          </div>
+        </form>
+      </FormProvider>
     )
 }
 

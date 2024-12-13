@@ -12,17 +12,20 @@ User.init({
         autoIncrement: true
     },
     firstname: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     lastname: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     username: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            len: [3, 20]
+        },
     },
     passwordHash: {
         type: DataTypes.STRING,
@@ -30,6 +33,12 @@ User.init({
     },
     password: {
         type: DataTypes.VIRTUAL,
+        validate: {
+            len: [6, 50],
+            is: {
+                args: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,50}$/
+            }
+        },
         set(value) {
             // Hash the password and store it in passwordHash
             this.setDataValue('passwordHash', bcrypt.hashSync(value, 10));

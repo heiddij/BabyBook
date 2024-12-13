@@ -1,4 +1,3 @@
-import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,6 +10,8 @@ import { passUser } from './reducers/userReducer'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import babyService from './services/babies'
+import UserForm from './components/UserForm'
+import { Form } from './components/Form'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -33,11 +34,16 @@ const App = () => {
   return (
     <div>
       <Notification />
+      <div className="bg-blue-500 text-white p-4">
+        If this text is styled, Tailwind is working.
+      </div>
       <Routes>
         <Route path="/login" element={<LoginForm />} />
         <Route path="/" element={<UserList users={users} />} />
         <Route path="/users/:id" element={<UserView />} />
         <Route path="/users/:id/:babyId" element={<BabyView babies={babies} />} />
+        <Route path="/registration" element={<UserForm />} />
+        <Route path='/form' element={<Form />} />
       </Routes>
     </div>
   )

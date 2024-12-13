@@ -8,15 +8,25 @@ const usersSlice = createSlice({
     setUsers(state, action) {
       return action.payload
     },
+    appendUser(state, action) {
+      state.push(action.payload)
+    },
   }
 })
 
-export const { setUsers, updateUser } = usersSlice.actions
+export const { setUsers, appendUser } = usersSlice.actions
 
 export const initializeUsers = () => {
   return async (dispatch) => {
     const users = await userService.getAll()
     dispatch(setUsers(users))
+  }
+}
+
+export const createUser = (userObject) => {
+  return async (dispatch) => {
+    const newUser = await userService.create(userObject)
+    dispatch(appendUser(newUser))
   }
 }
 

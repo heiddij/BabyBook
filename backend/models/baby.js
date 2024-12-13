@@ -11,11 +11,11 @@ Baby.init({
         autoIncrement: true
     },
     firstname: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     lastname: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false
     },
     birthdate: {
@@ -23,7 +23,7 @@ Baby.init({
         allowNull: false
     },
     birthplace: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING(30)
     },
 }, {
     sequelize,
