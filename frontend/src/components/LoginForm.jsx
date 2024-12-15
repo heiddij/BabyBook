@@ -7,16 +7,18 @@ import Input from './Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
 import { GrMail } from 'react-icons/gr'
-import { username_validation, password_validation } from '../utils/inputValidations'
+import { usernamelogin_validation, passwordlogin_validation } from '../utils/inputValidations'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
+import { Link, useNavigate } from "react-router-dom"
 
 const LoginForm = () => {
     const methods = useForm()
     const dispatch = useDispatch()
     const [success, setSuccess] = useState(false)
-    const [error, setError] = useState(false)
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
 
-    // should this be in App.jsx?
+    /*  // needed?
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
         if (loggedUserJSON) {
@@ -24,7 +26,7 @@ const LoginForm = () => {
           dispatch(passUser(user))
           babyService.setToken(user.token)
         }
-    }, [])
+    }, [])  */
 
     const onSubmit = methods.handleSubmit(async data => {
       try {
@@ -39,10 +41,11 @@ const LoginForm = () => {
         dispatch(passUser(user))
         methods.reset()
         setSuccess(true)
-        setError(false)
+        setError('')
+        navigate('/')
       } catch (exception) {
         setSuccess(false)
-        setError(true)
+        setError(exception.response?.data?.error || 'Jokin meni vikaan')
       }
     })
 
@@ -56,8 +59,8 @@ const LoginForm = () => {
         className="container"
       >
       <div className="grid gap-5 md:grid-cols-2">
-        <Input {...username_validation} />
-        <Input {...password_validation} />
+        <Input {...usernamelogin_validation} />
+        <Input {...passwordlogin_validation} />
       </div>
       <div className="mt-5">
         {success && (
@@ -67,7 +70,7 @@ const LoginForm = () => {
         )}
         {error && (
           <p className="flex items-center gap-1 mb-5 font-semibold text-red-500">
-            <BsFillXSquareFill /> Väärä käyttäjänimi tai salasana
+            <BsFillXSquareFill /> {error}
           </p>
         )}
         <button
@@ -77,6 +80,9 @@ const LoginForm = () => {
           <GrMail />
           Kirjaudu
         </button>
+      </div>
+      <div className="grid gap-5 md:grid-cols-2">
+        <p>Ei vielä käyttäjätunnusta?</p> <Link to="/registration">Rekisteröidy</Link>
       </div>
       </form>
       </FormProvider>

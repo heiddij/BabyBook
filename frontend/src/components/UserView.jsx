@@ -20,7 +20,7 @@ const UserView = () => {
             {userBabies.length > 0 ? (
                 <ul>
                     {userBabies.map(baby => (
-                        <Baby key={baby.id} baby={baby} user={user} />
+                        <Baby key={baby.id} baby={baby} userId={id} />
                     ))}
                 </ul>
             ) : (

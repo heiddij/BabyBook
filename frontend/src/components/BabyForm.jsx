@@ -12,6 +12,7 @@ const BabyForm = () => {
     const methods = useForm()
     const dispatch = useDispatch()
     const [success, setSuccess] = useState(false)
+    const [error, setError] = useState('')
 
     const onSubmit = methods.handleSubmit(data => {
       const newBaby = {
@@ -20,9 +21,16 @@ const BabyForm = () => {
         birthdate: data.birthdate,
         birthplace: data.birthplace
       }
-      dispatch(createBaby(newBaby))
-      methods.reset()
-      setSuccess(true)
+
+      try {
+        dispatch(createBaby(newBaby))
+        methods.reset()
+        setSuccess(true)
+        setError('')
+      } catch(exception) {
+        setSuccess(false)
+        setError(exception.response?.data?.error || 'Jokin meni vikaan')
+      }
     })
 
     return (
@@ -44,6 +52,11 @@ const BabyForm = () => {
             {success && (
               <p className="flex items-center gap-1 mb-5 font-semibold text-green-500">
                 <BsFillCheckSquareFill /> Vauvan lisäys onnistui
+              </p>
+            )}
+            {error && (
+              <p className="flex items-center gap-1 mb-5 font-semibold text-red-500">
+                  <BsFillXSquareFill /> {error}
               </p>
             )}
             <button

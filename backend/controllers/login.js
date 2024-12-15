@@ -20,7 +20,7 @@ router.post('/', async (request, response) => {
 
   if (!(user && passwordCorrect)) {
     return response.status(401).json({
-      error: 'invalid username or password'
+      error: 'Väärä käyttäjänimi tai salasana'
     })
   }
 

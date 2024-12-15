@@ -44,7 +44,7 @@ router.post('/', tokenExtractor, async (req, res) => {
       const baby = await Baby.create({ ...req.body, userId: user.id })
       res.json(baby)
     } catch(error) {
-      return res.status(400).json({ error })
+      return res.status(400).json({ error: 'Jokin meni vikaan' })
     }
 })
 

@@ -1,5 +1,5 @@
-import { Routes, Route } from 'react-router-dom'
-import { useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import UserList from './components/UserList'
 import UserView from './components/UserView'
@@ -8,42 +8,51 @@ import { initializeUsers } from './reducers/usersReducer'
 import { initializeBabies } from './reducers/babyReducer'
 import { passUser } from './reducers/userReducer'
 import LoginForm from './components/LoginForm'
-import Notification from './components/Notification'
 import babyService from './services/babies'
 import UserForm from './components/UserForm'
-import { Form } from './components/Form'
+import Navigation from './components/Navigation'
+import Spinner from './components/Spinner'
 
 const App = () => {
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    dispatch(initializeUsers())
-    dispatch(initializeBabies())
+    const fetchData = async () => {
+      dispatch(initializeUsers())
+      dispatch(initializeBabies())
 
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-        if (loggedUserJSON) {
-          const user = JSON.parse(loggedUserJSON)
-          dispatch(passUser(user))
-          babyService.setToken(user.token)
-        }
-  }, [])
+      const loggedUserJSON = window.localStorage.getItem('loggedUser')
+      if (loggedUserJSON) {
+        const user = JSON.parse(loggedUserJSON)
+        dispatch(passUser(user))
+        babyService.setToken(user.token)
+      }
+      setLoading(false)
+    }
 
-  const users = useSelector((state) => state.users)
-  const babies = useSelector((state) => state.babies)
+    fetchData()
+  }, [dispatch])
+
+  if (loading) {
+    return <Spinner />
+  }
+
+  const handleLogout = () => {
+    window.localStorage.clear()
+    dispatch(passUser(null))
+  }
   
   return (
     <div>
-      <Notification />
-      <div className="bg-blue-500 text-white p-4">
-        If this text is styled, Tailwind is working.
-      </div>
+      { user && <Navigation handleLogout={handleLogout} /> }
       <Routes>
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/" element={<UserList users={users} />} />
+        <Route path="/" element={user ? <UserList /> : <Navigate replace to="/login" />} />
         <Route path="/users/:id" element={<UserView />} />
-        <Route path="/users/:id/:babyId" element={<BabyView babies={babies} />} />
+        <Route path="/users/:id/:babyId" element={<BabyView />} />
         <Route path="/registration" element={<UserForm />} />
-        <Route path='/form' element={<Form />} />
       </Routes>
     </div>
   )

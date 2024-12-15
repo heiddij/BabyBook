@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom"
+import { useSelector } from "react-redux"
 
-const BabyView = ({ babies }) => {
+const BabyView = () => {
+    const babies = useSelector((state) => state.babies)
     const id = useParams().babyId
     const baby = babies.find((b) => b.id === Number(id))
 

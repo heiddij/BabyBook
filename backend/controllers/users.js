@@ -25,8 +25,11 @@ router.post('/', async (req, res) => {
       const user = await User.create(req.body)
       res.json(user.username)
     } catch(error) {
-        console.error('Error creating user:', error)
-        return res.status(400).json({ error: error.message })
+        console.error(error)
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(400).json({ error: 'Käyttäjänimi on jo varattu' });
+        }
+        return res.status(500).json({ error: 'Jokin meni vikaan' });
     }
 })
 

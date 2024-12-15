@@ -1,88 +1,79 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createUser } from '../reducers/usersReducer'
-import { setNotification } from '../reducers/notificationReducer'
+import Input from './Input'
+import { useForm } from 'react-hook-form'
+import { FormProvider } from 'react-hook-form'
+import { GrMail } from 'react-icons/gr'
+import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
+import { firstname_validation, lastname_validation, usernamereg_validation, passwordreg_validation } from '../utils/inputValidations'
+import { useNavigate } from 'react-router-dom'
 
 const UserForm = () => {
-    const [firstname, setFirstname] = useState('')
-    const [lastname, setLastname] = useState('')
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const methods = useForm()
     const dispatch = useDispatch()
+    const [success, setSuccess] = useState(false)
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
 
-    const addUser = (event) => {
-        event.preventDefault()
-
+    const onSubmit = methods.handleSubmit(async data => {
         const newUser = {
-            firstname: firstname,
-            lastname: lastname,
-            username: username,
-            password: password
+            firstname: data.firstname,
+            lastname: data.lastname,
+            username: data.username,
+            password: data.password
         }
         
-        dispatch(createUser(newUser))
-        dispatch(
-            setNotification(
-              `Rekisteröinti onnistui. Voit nyt kirjautua sisään.`,
-              5
-            )
-        )
-
-        setFirstname('')
-        setLastname('')
-        setUsername('')
-        setPassword('')
-    }
+        try {
+            await dispatch(createUser(newUser))
+            methods.reset()
+            setSuccess(true)
+            setError('')
+            setTimeout(() => {
+                navigate('/login')
+            }, 2000)
+        } catch (exception) {
+            setSuccess(false)
+            setError(exception.response?.data?.error || 'Jokin meni vikaan')
+        }
+    })
 
     return (
-        <div>
+        <FormProvider {...methods}>
             <h2>Rekisteröidy</h2>
-            <form onSubmit={addUser}>
-                <div>
-                    Nimi:
-                    <input
-                    type="text"
-                    value={firstname}
-                    name="Firstname"
-                    onChange={({ target }) => setFirstname(target.value)}
-                    id="firstname"
-                    />
+            <form
+                onSubmit={e => e.preventDefault()}
+                noValidate
+                autoComplete="off"
+                className="container"
+            >
+                <div className="grid gap-5 md:grid-cols-2">
+                    <Input {...firstname_validation} />
+                    <Input {...lastname_validation} />
+                    <Input {...usernamereg_validation} />
+                    <Input {...passwordreg_validation} />
                 </div>
-                <div>
-                    Sukunimi:
-                    <input
-                    type="text"
-                    value={lastname}
-                    name="Lastname"
-                    onChange={({ target }) => setLastname(target.value)}
-                    id="lastname"
-                    />
+                <div className="mt-5">
+                    {success && (
+                    <p className="flex items-center gap-1 mb-5 font-semibold text-green-500">
+                        <BsFillCheckSquareFill /> Käyttäjän rekisteröinti onnistui
+                    </p>
+                    )}
+                    {error && (
+                        <p className="flex items-center gap-1 mb-5 font-semibold text-red-500">
+                            <BsFillXSquareFill /> {error}
+                        </p>
+                    )}
+                    <button
+                    onClick={onSubmit}
+                    className="flex items-center gap-1 p-5 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-800"
+                    >
+                        <GrMail />
+                        Tallenna
+                    </button>
                 </div>
-                <div>
-                    Syntymäaika:
-                    <input
-                    type="text"
-                    value={username}
-                    name="Username"
-                    onChange={({ target }) => setUsername(target.value)}
-                    id="username"
-                    />
-                </div>
-                <div>
-                    Syntymäpaikka:
-                    <input
-                    type="text"
-                    value={password}
-                    name="Password"
-                    onChange={({ target }) => setPassword(target.value)}
-                    id="password"
-                    />
-                </div>
-                <button id="submit-button" type="submit">
-                    Tallenna
-                </button>
             </form>
-        </div>
+        </FormProvider>
     )
 }
 

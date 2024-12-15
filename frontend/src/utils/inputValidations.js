@@ -1,12 +1,3 @@
-/* import { useSelector } from "react-redux"
-
-const users = useSelector(state => state.users);
-
-const checkUsernameUnique = (username) => {
-    const usernameExists = users.some(user => user.username === username);
-    return usernameExists ? 'Username already taken' : true; // If username exists, return an error message
-} */
-
 export const firstname_validation = {
     name: 'firstname',
     label: 'Etunimi',
@@ -71,7 +62,7 @@ export const birthplace_validation = {
     },
 }
 
-export const username_validation = {
+export const usernamelogin_validation = {
     name: 'username',
     label: 'Käyttäjänimi',
     type: 'text',
@@ -81,9 +72,59 @@ export const username_validation = {
         required: {
         value: true,
         message: 'Kirjoita käyttäjänimi',
-        },
-        //checkUsernameUnique
+        }
     },
+}
+
+export const passwordlogin_validation = {
+  name: 'password',
+  label: 'Salasana',
+  type: 'password',
+  id: 'password',
+  placeholder: 'Kirjoita salasana...',
+  validation: {
+    required: {
+      value: true,
+      message: 'Kirjoita salasana',
+    }
+  },
+}
+
+export const usernamereg_validation = {
+  name: 'username',
+  label: 'Käyttäjänimi',
+  type: 'text',
+  id: 'username',
+  placeholder: 'Kirjoita käyttäjänimi...',
+  validation: {
+      required: {
+      value: true,
+      message: 'Kirjoita käyttäjänimi',
+      },
+  },
+}
+
+export const passwordreg_validation = {
+  name: 'password',
+  label: 'Salasana',
+  type: 'password',
+  id: 'password',
+  placeholder: 'Kirjoita salasana...',
+  validation: {
+    required: {
+      value: true,
+      message: 'Kirjoita salasana',
+    },
+    minLength: {
+      value: 6,
+      message: 'Vähintään 6 kirjainta',
+    },
+    pattern: {
+      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,50}$/,
+      message:
+        "Salasanassa on oltava vähintään 1 iso kirjain, 1 numero ja 1 erikoismerkki.",
+    },
+  },
 }
   
   export const desc_validation = {
@@ -102,31 +143,6 @@ export const username_validation = {
         message: '200 characters max',
       },
     },
-  }
-  
-  export const password_validation = {
-    name: 'password',
-    label: 'Salasana',
-    type: 'password',
-    id: 'password',
-    placeholder: 'Kirjoita salasana...',
-    /*
-    validation: {
-      required: {
-        value: true,
-        message: 'Kirjoita salasana',
-      },
-      minLength: {
-        value: 6,
-        message: 'Vähintään 6 kirjainta',
-      },
-      pattern: {
-        value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,50}$/,
-        message:
-          "Salasanassa on oltava vähintään 1 iso kirjain, 1 numero ja 1 erikoismerkki.",
-      },
-    },
-    */
   }
 
   export const num_validation = {
