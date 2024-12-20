@@ -6,9 +6,21 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  @apply bg-slate-50;
+  @apply bg-my-nude;
 }
 
 .container {
   @apply w-full max-w-3xl p-5 mx-auto;
+}
+
+h1 {
+  @apply my-8 justify-self-center font-bold text-3xl
+}
+
+form {
+  @apply mx-auto sm:w-96 px-5 bg-my-pink py-8 rounded-md
+}
+
+.btn-primary {
+  @apply flex items-center gap-1 p-5 font-semibold text-white bg-my-green rounded-md hover:bg-my-green2
 }

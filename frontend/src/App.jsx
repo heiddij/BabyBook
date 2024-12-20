@@ -17,6 +17,7 @@ const App = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   const [loading, setLoading] = useState(true)
+  console.log(user)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +47,7 @@ const App = () => {
   
   return (
     <div>
-      { user && <Navigation handleLogout={handleLogout} /> }
+      { user && <Navigation handleLogout={handleLogout} user={user} /> }
       <Routes>
         <Route path="/login" element={<LoginForm />} />
         <Route path="/" element={user ? <UserList /> : <Navigate replace to="/login" />} />

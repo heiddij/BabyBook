@@ -6,7 +6,7 @@ import babyService from '../services/babies'
 import Input from './Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
-import { GrMail } from 'react-icons/gr'
+import { TbArrowBigRight } from 'react-icons/tb'
 import { usernamelogin_validation, passwordlogin_validation } from '../utils/inputValidations'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 import { Link, useNavigate } from "react-router-dom"
@@ -17,16 +17,6 @@ const LoginForm = () => {
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
     const navigate = useNavigate()
-
-    /*  // needed?
-    useEffect(() => {
-        const loggedUserJSON = window.localStorage.getItem('loggedUser')
-        if (loggedUserJSON) {
-          const user = JSON.parse(loggedUserJSON)
-          dispatch(passUser(user))
-          babyService.setToken(user.token)
-        }
-    }, [])  */
 
     const onSubmit = methods.handleSubmit(async data => {
       try {
@@ -51,14 +41,13 @@ const LoginForm = () => {
 
     return (
       <FormProvider {...methods}>
-      <h2>Kirjaudu sisään</h2>
+      <h1>Kirjaudu sisään</h1>
       <form
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
-        className="container"
       >
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-5 grid-cols-1">
         <Input {...usernamelogin_validation} />
         <Input {...passwordlogin_validation} />
       </div>
@@ -75,14 +64,14 @@ const LoginForm = () => {
         )}
         <button
           onClick={onSubmit}
-          className="flex items-center gap-1 p-5 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-800"
+          className="btn-primary"
         >
-          <GrMail />
+          <TbArrowBigRight />
           Kirjaudu
         </button>
       </div>
-      <div className="grid gap-5 md:grid-cols-2">
-        <p>Ei vielä käyttäjätunnusta?</p> <Link to="/registration">Rekisteröidy</Link>
+      <div className="mt-5">
+        <p>Ei vielä käyttäjätunnusta?</p> <Link to="/registration" className="font-semibold hover:font-bold">Rekisteröidy</Link>
       </div>
       </form>
       </FormProvider>

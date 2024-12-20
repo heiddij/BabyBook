@@ -35,14 +35,12 @@ const BabyForm = () => {
 
     return (
       <FormProvider {...methods}>
-        <h2>Lisää vauva</h2>
         <form
           onSubmit={e => e.preventDefault()}
           noValidate
           autoComplete="off"
-          className="container"
         >
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-5 grid-cols-1">
             <Input {...firstname_validation} />
             <Input {...lastname_validation} />
             <Input {...birthdate_validation} />
@@ -61,7 +59,7 @@ const BabyForm = () => {
             )}
             <button
               onClick={onSubmit}
-              className="flex items-center gap-1 p-5 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-800"
+              className="btn-primary"
             >
               <GrMail />
               Tallenna
