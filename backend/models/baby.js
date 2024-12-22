@@ -26,7 +26,7 @@ Baby.init({
         type: DataTypes.STRING(30)
     },
     profilepic: {
-        type: DataTypes.BLOB('long')
+        type: DataTypes.STRING
     }
 }, {
     sequelize,

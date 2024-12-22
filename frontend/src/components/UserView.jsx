@@ -8,6 +8,7 @@ const UserView = () => {
     const id = useParams().id
     const users = useSelector((state) => state.users)
     const user = users.find((u) => u.id === Number(id))
+    // TODO: user sisältää babiesin. Eli hae user babies user.babies
     const babies = useSelector((state) => state.babies)
     const userBabies = babies.filter((b) => b.userId === user.id)
     const loggedUser = useSelector((state) => state.user)
