@@ -12,12 +12,15 @@ const getAll = () => {
   return request.then((response) => response.data)
 }
 
-const create = async (newObject) => {
+const create = async (formdata) => {
   const config = {
-    headers: { Authorization: token }
+    headers: { 
+      Authorization: token,
+      "Content-Type": "multipart/form-data",
+    }
   }
 
-  const response = await axios.post(baseUrl, newObject, config)
+  const response = await axios.post(baseUrl, formdata, config)
   return response.data
 }
 

@@ -25,6 +25,9 @@ Baby.init({
     birthplace: {
         type: DataTypes.STRING(30)
     },
+    profilepic: {
+        type: DataTypes.BLOB('long')
+    }
 }, {
     sequelize,
     underscored: true,

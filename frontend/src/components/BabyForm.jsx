@@ -5,8 +5,8 @@ import Input from './Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
 import { GrMail } from 'react-icons/gr'
-import { firstname_validation, lastname_validation, birthdate_validation, birthplace_validation } from '../utils/inputValidations'
-import { BsFillCheckSquareFill } from 'react-icons/bs'
+import { firstname_validation, lastname_validation, birthdate_validation, birthplace_validation, profilepic_validation } from '../utils/inputValidations'
+import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const BabyForm = () => {
     const methods = useForm()
@@ -14,24 +14,28 @@ const BabyForm = () => {
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
 
-    const onSubmit = methods.handleSubmit(data => {
-      const newBaby = {
-        firstname: data.firstname,
-        lastname: data.lastname,
-        birthdate: data.birthdate,
-        birthplace: data.birthplace
+    const onSubmit = methods.handleSubmit(async (data) => {
+      const formData = new FormData()
+      formData.append("firstname", data.firstname)
+      formData.append("lastname", data.lastname)
+      formData.append("birthdate", data.birthdate)
+      formData.append("birthplace", data.birthplace)
+    
+      if (data.profilepic.length > 0) {
+        formData.append("profilepic", data.profilepic[0])
       }
-
+    
       try {
-        dispatch(createBaby(newBaby))
+        await dispatch(createBaby(formData))
         methods.reset()
         setSuccess(true)
-        setError('')
-      } catch(exception) {
+        setError("")
+      } catch (exception) {
         setSuccess(false)
-        setError(exception.response?.data?.error || 'Jokin meni vikaan')
+        setError(exception.response?.data?.error || "Jokin meni vikaan")
       }
-    })
+    });
+    
 
     return (
       <FormProvider {...methods}>
@@ -45,6 +49,7 @@ const BabyForm = () => {
             <Input {...lastname_validation} />
             <Input {...birthdate_validation} />
             <Input {...birthplace_validation} />
+            <Input {...profilepic_validation} />
           </div>
           <div className="mt-5">
             {success && (

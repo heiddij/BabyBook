@@ -18,6 +18,18 @@ const BabyView = () => {
                 <li>Nimi: {baby.firstname} {baby.lastname}</li>
                 <li>Syntymäaika: {baby.birthdate}</li>
                 <li>Syntymäpaikka: {baby.birthplace}</li>
+                <li>
+                    Kuva: 
+                    {baby.profilepic ? (
+                        <img
+                        src={baby.profilepic}
+                        alt={`${baby.firstname}'s profile`}
+                        className="w-72 h-72 rounded-md object-cover"
+                        />
+                    ) : (
+                        <span>Ei kuvaa saatavilla</span>
+                    )}
+                </li>
             </ul>
             <p>Muokkaa tietoja</p>
         </div>

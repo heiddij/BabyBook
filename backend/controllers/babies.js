@@ -1,5 +1,8 @@
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')
+const multer = require("multer")
+const upload = multer({ dest: "uploads/" })
+const fs = require('fs')
 
 const { SECRET } = require('../util/config')
 const { Baby, User } = require('../models')
@@ -26,10 +29,28 @@ const tokenExtractor = (req, res, next) => {
 }
 
 router.get('/', async (req, res) => {
-    const babies = await Baby.findAll()
-    res.json(babies)
-})
-  
+  try {
+      const babies = await Baby.findAll();
+      const babiesWithProfilePic = babies.map((baby) => {
+          // Convert BLOB to base64 if profilepic exists
+          let profilepicBase64 = null;
+          if (baby.profilepic) {
+              // Convert the BLOB data to base64 and prepend the MIME type
+              profilepicBase64 = `data:image/jpeg;base64,${baby.profilepic.toString("base64")}`;
+              console.log(profilepicBase64)
+          }
+          return {
+              ...baby.toJSON(),
+              profilepic: profilepicBase64,
+          };
+      });
+      res.json(babiesWithProfilePic);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.get('/:id', babyFinder, async (req, res) => {
 if (req.baby) {
     res.json(req.baby)
@@ -38,14 +59,26 @@ if (req.baby) {
 }
 })
 
-router.post('/', tokenExtractor, async (req, res) => {
-    try {
-      const user = await User.findByPk(req.decodedToken.id)
-      const baby = await Baby.create({ ...req.body, userId: user.id })
-      res.json(baby)
-    } catch(error) {
-      return res.status(400).json({ error: 'Jokin meni vikaan' })
+router.post("/", upload.single("profilepic"), tokenExtractor, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.decodedToken.id)
+
+    let imageBuffer = null
+    if (req.file) {
+      imageBuffer = fs.readFileSync(req.file.path)
     }
+
+    const baby = await Baby.create({
+      ...req.body, // Other fields
+      userId: user.id,
+      profilepic: imageBuffer, // Store the image as a BLOB
+    })
+
+    res.json(baby)
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json({ error: "Jokin meni vikaan" })
+  }
 })
 
 router.delete('/:id', babyFinder, async (req, res) => {

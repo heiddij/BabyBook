@@ -23,9 +23,9 @@ export const initializeBabies = () => {
     }
 }
 
-export const createBaby = (babyObject) => {
+export const createBaby = (formData) => {
     return async (dispatch) => {
-      const newBaby = await babyService.create(babyObject)
+      const newBaby = await babyService.create(formData)
       dispatch(appendBaby(newBaby))
     }
 }

@@ -17,7 +17,6 @@ const App = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   const [loading, setLoading] = useState(true)
-  console.log(user)
 
   useEffect(() => {
     const fetchData = async () => {

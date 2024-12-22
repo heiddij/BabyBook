@@ -62,6 +62,24 @@ export const birthplace_validation = {
     },
 }
 
+export const profilepic_validation = {
+  name: 'profilepic',
+  label: 'Profiilikuva',
+  type: 'file',
+  id: 'profilepic',
+  placeholder: 'Lataa profiilikuva...',
+  validation: {
+    validate: {
+      fileType: (files) =>
+        files && ["image/jpeg", "image/jpg", "image/png"].includes(files[0]?.type) || 
+        "Sallitut tiedostotyypit: JPG, JPEG, PNG",
+      fileSize: (files) =>
+        files && files[0]?.size <= 2 * 1024 * 1024 || 
+        "Tiedoston maksimikoko 2MB",
+    },
+  },
+}
+
 export const usernamelogin_validation = {
     name: 'username',
     label: 'Käyttäjänimi',
