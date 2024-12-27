@@ -24,4 +24,24 @@ const create = async (formdata) => {
   return response.data
 }
 
-export default { getAll, setToken, create }
+const update = async (id, formdata) => {
+  const config = {
+    headers: { 
+      Authorization: token,
+      "Content-Type": "multipart/form-data",
+    }
+  }
+
+  const response = await axios.put(`${baseUrl}/${id}`, formdata, config)
+  return response.data
+}
+
+const deleteBaby = async (id) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+}
+
+export default { getAll, setToken, create, update, deleteBaby }

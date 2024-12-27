@@ -11,10 +11,19 @@ const babySlice = createSlice({
         appendBaby(state, action) {
             state.push(action.payload)
         },
+        modifyBaby(state, action) {
+            return state.map((baby) =>
+            baby.id !== action.payload.id
+                ? baby
+                : action.payload)
+        },
+        remove(state, action) {
+           return state.filter((baby) => baby.id !== action.payload)
+        }
     }
 })
 
-export const { setBabies, appendBaby } = babySlice.actions
+export const { setBabies, appendBaby, modifyBaby, remove } = babySlice.actions
 
 export const initializeBabies = () => {
     return async (dispatch) => {
@@ -27,6 +36,23 @@ export const createBaby = (formData) => {
     return async (dispatch) => {
       const newBaby = await babyService.create(formData)
       dispatch(appendBaby(newBaby))
+    }
+}
+
+export const updateBaby = (id, formData) => {
+    return async (dispatch) => {
+        const updatedBaby = await babyService.update(id, formData)
+        dispatch(modifyBaby(updatedBaby))
+    }
+}
+
+export const deleteBaby = (id) => {
+    return async (dispatch) => {
+      window.confirm(
+        `Haluatko varmasti poistaa vauvan?`
+      )
+      await babyService.deleteBaby(id)
+      dispatch(remove(id))
     }
 }
 

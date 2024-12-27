@@ -40,7 +40,7 @@ const UserForm = () => {
 
     return (
         <FormProvider {...methods}>
-            <h2>Rekisteröidy</h2>
+            <h1>Rekisteröidy</h1>
             <form
                 onSubmit={e => e.preventDefault()}
                 noValidate
