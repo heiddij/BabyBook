@@ -5,7 +5,7 @@ import Input from './Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
 import { GrMail } from 'react-icons/gr'
-import { firstname_validation, lastname_validation, birthdate_validation, birthplace_validation, profilepic_validation } from '../utils/inputValidations'
+import { firstname_validation, lastname_validation, birthdate_validation, birthplace_validation, image_validation } from '../utils/inputValidations'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const BabyForm = ({ baby = null }) => {
@@ -31,8 +31,8 @@ const BabyForm = ({ baby = null }) => {
       formData.append("birthdate", data.birthdate)
       formData.append("birthplace", data.birthplace)
     
-      if (data.profilepic.length > 0) {
-        formData.append("profilepic", data.profilepic[0])
+      if (data.image.length > 0) {
+        formData.append("profilepic", data.image[0])
       }
     
       try {
@@ -48,7 +48,7 @@ const BabyForm = ({ baby = null }) => {
         setSuccess(false)
         setError(exception.response?.data?.error || "Jokin meni vikaan")
       }
-    });
+    })
     
 
     return (
@@ -63,7 +63,7 @@ const BabyForm = ({ baby = null }) => {
             <Input {...lastname_validation} />
             <Input {...birthdate_validation} />
             <Input {...birthplace_validation} />
-            <Input {...profilepic_validation} />
+            <Input {...image_validation} />
           </div>
           <div className="mt-5">
             {success && (

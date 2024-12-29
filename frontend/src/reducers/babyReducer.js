@@ -48,9 +48,6 @@ export const updateBaby = (id, formData) => {
 
 export const deleteBaby = (id) => {
     return async (dispatch) => {
-      window.confirm(
-        `Haluatko varmasti poistaa vauvan?`
-      )
       await babyService.deleteBaby(id)
       dispatch(remove(id))
     }

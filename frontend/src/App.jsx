@@ -6,9 +6,11 @@ import UserView from './components/UserView'
 import BabyView from './components/BabyView'
 import { initializeUsers } from './reducers/usersReducer'
 import { initializeBabies } from './reducers/babyReducer'
+import { initializePosts } from './reducers/postReducer'
 import { passUser } from './reducers/userReducer'
 import LoginForm from './components/LoginForm'
 import babyService from './services/babies'
+import postService from './services/posts'
 import UserForm from './components/UserForm'
 import Navigation from './components/Navigation'
 import Spinner from './components/Spinner'
@@ -22,12 +24,14 @@ const App = () => {
     const fetchData = async () => {
       dispatch(initializeUsers())
       dispatch(initializeBabies())
+      dispatch(initializePosts())
 
       const loggedUserJSON = window.localStorage.getItem('loggedUser')
       if (loggedUserJSON) {
         const user = JSON.parse(loggedUserJSON)
         dispatch(passUser(user))
         babyService.setToken(user.token)
+        postService.setToken(user.token)
       }
       setLoading(false)
     }

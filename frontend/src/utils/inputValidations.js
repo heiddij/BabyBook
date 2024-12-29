@@ -62,12 +62,11 @@ export const birthplace_validation = {
     },
 }
 
-export const profilepic_validation = {
-  name: 'profilepic',
-  label: 'Profiilikuva',
+export const image_validation = {
+  name: 'image',
+  label: 'lataa kuva',
   type: 'file',
-  id: 'profilepic',
-  placeholder: 'Lataa profiilikuva...',
+  id: 'image',
   validation: {
     validate: {
       fileType: (files) =>
@@ -121,6 +120,10 @@ export const usernamereg_validation = {
       value: true,
       message: 'Kirjoita käyttäjänimi',
       },
+      maxLength: {
+        value: 20,
+        message: 'Enintään 20 kirjainta',
+      },
   },
 }
 
@@ -139,6 +142,10 @@ export const passwordreg_validation = {
       value: 6,
       message: 'Vähintään 6 kirjainta',
     },
+    maxLength: {
+      value: 50,
+      message: 'Enintään 50 kirjainta',
+    },
     pattern: {
       value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,50}$/,
       message:
@@ -147,12 +154,12 @@ export const passwordreg_validation = {
   },
 }
   
-  export const desc_validation = {
-    name: 'description',
-    label: 'description',
+  export const post_validation = {
+    name: 'post',
+    label: 'julkaisu',
     multiline: true,
-    id: 'description',
-    placeholder: 'write description ...',
+    id: 'post',
+    placeholder: 'Mitä vauvallesi kuuluu?',
     validation: {
       required: {
         value: true,
@@ -160,7 +167,7 @@ export const passwordreg_validation = {
       },
       maxLength: {
         value: 200,
-        message: '200 characters max',
+        message: 'Enintään 200 kirjainta',
       },
     },
   }

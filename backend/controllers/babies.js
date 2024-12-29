@@ -1,16 +1,7 @@
 const router = require('express').Router()
+const uploadConfig = require('../util/uploadConfig')
 const multer = require('multer')
-const storage = multer.memoryStorage()
-const upload = multer({ 
-  storage,
-  limits: { fileSize: 2 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.mimetype)) {
-      return cb(new Error('Only JPG, PNG, and JPEG are allowed'));
-    }
-    cb(null, true);
-  }
-})
+const upload = multer(uploadConfig)
 const axios = require('axios')
 const FormData = require('form-data')
 require('dotenv').config()
@@ -27,7 +18,7 @@ router.get('/', async (req, res) => {
       console.error(error)
       res.status(500).json({ error: "Server error" })
   }
-});
+})
 
 router.get('/:id', babyFinder, async (req, res) => {
 if (req.baby) {
@@ -60,23 +51,23 @@ router.post("/", upload.single("profilepic"), tokenExtractor, async (req, res) =
             ...form.getHeaders(), 
           },
         }
-      );
+      )
 
-      imageUrl = response.data.data.url;
+      imageUrl = response.data.data.url
     }
 
     const baby = await Baby.create({
       ...req.body,
       userId: user.id,
       profilepic: imageUrl,
-    });
+    })
 
-    res.json(baby);
+    res.json(baby)
   } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error.message);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error:', error.response ? error.response.data : error.message)
+    res.status(500).json({ error: 'Server error' })
   }
-});
+})
 
 router.delete('/:id', babyFinder, tokenExtractor, async (req, res) => {
   const user = await User.findByPk(req.decodedToken.id)
