@@ -11,6 +11,7 @@ import { passUser } from './reducers/userReducer'
 import LoginForm from './components/LoginForm'
 import babyService from './services/babies'
 import postService from './services/posts'
+import followService from './services/follow'
 import UserForm from './components/UserForm'
 import Navigation from './components/Navigation'
 import Spinner from './components/Spinner'
@@ -32,6 +33,7 @@ const App = () => {
         dispatch(passUser(user))
         babyService.setToken(user.token)
         postService.setToken(user.token)
+        followService.setToken(user.token)
       }
       setLoading(false)
     }

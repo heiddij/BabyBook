@@ -4,9 +4,11 @@ const { User, Baby } = require('../models')
 
 router.get('/', async (req, res) => {
     const users = await User.findAll({
-        include: {
-          model: Baby
-        }
+        include: [
+            { model: Baby },
+            { model: User, as: 'followers' },
+            { model: User, as: 'following' }
+        ]
       })
     res.json(users)
 })

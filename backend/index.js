@@ -11,6 +11,7 @@ const usersRouter = require('./controllers/users')
 const babiesRouter = require('./controllers/babies')
 const loginRouter = require('./controllers/login')
 const postsRouter = require('./controllers/posts')
+const followRouter = require('./controllers/follow')
 
 
 app.use(cors())
@@ -21,6 +22,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/babies', babiesRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/posts', postsRouter)
+app.use('/api/follow', followRouter)
 
 const start = async () => {
   await connectToDatabase()

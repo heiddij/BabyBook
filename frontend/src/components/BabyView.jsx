@@ -16,7 +16,6 @@ const BabyView = () => {
     const id = useParams().babyId
     const baby = babies.find((b) => b.id === Number(id))
     const loggedUser = useSelector((state) => state.user)
-    const isLoggedUser = loggedUser.id === baby.userId
     const [modifyBaby, setModifyBaby] = useState(false)
     const [buttonText, setButtonText] = useState("Muokkaa tietoja")
     const [openDialog, setOpenDialog] = useState(false)
@@ -26,6 +25,8 @@ const BabyView = () => {
     if (!baby) {
         return <p>Vauvaa ei löydy</p>
     }
+
+    const isLoggedUser = loggedUser.id === baby.userId
 
     const handleModifyBaby = () => {
         setModifyBaby((prevState) => {
