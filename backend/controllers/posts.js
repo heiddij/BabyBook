@@ -8,7 +8,7 @@ require('dotenv').config()
 
 const tokenExtractor = require('../middlewares/tokenExtractor')
 const babyFinder = require('../middlewares/babyFinder')
-const { Post, User } = require('../models')
+const { Post, User, Baby } = require('../models')
 
 router.get('/', async (req, res) => {
   try {
@@ -19,6 +19,78 @@ router.get('/', async (req, res) => {
       res.status(500).json({ error: "Server error" })
   }
 })
+
+router.get('/own', tokenExtractor, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.decodedToken.id, {
+      include: [
+        { model: Baby,
+          include: [
+            { model: Post }
+          ]
+        }
+    ]
+  })
+
+  const userPosts = user.babies.flatMap(baby => baby.posts.map(post => post))
+
+  res.status(200).json(userPosts)
+} catch (e) {
+  console.error('Error:', e.message || e)
+  res.status(500).json({ error: 'Server error' })
+}
+})
+
+router.get('/following', tokenExtractor, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.decodedToken.id, {
+      include: [
+        { 
+          model: User, as: 'following', 
+          attributes: ['id', 'username'],
+          include: [
+            {
+              model: Baby, 
+              attributes: ['id', 'firstname', 'profilepic'], 
+              include: [
+                { 
+                  model: Post, 
+                  attributes: ['id', 'post', 'image', 'createdAt'], 
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    })
+
+    const followedUsersBabiesPosts = user.following.flatMap(followedUser => 
+      followedUser.babies.flatMap(baby => 
+        baby.posts.map(post => ({
+          postId: post.id,
+          post: post.post,
+          image: post.image,
+          createdAt: post.createdAt,
+          baby: {
+            id: baby.id,
+            firstname: baby.firstname,
+            profilepic: baby.profilepic,
+          },
+          followingUser: {
+            id: followedUser.id,
+            username: followedUser.username,
+          }
+        }))
+      )
+    )
+
+    res.status(200).json(followedUsersBabiesPosts)
+  } catch (e) {
+    console.error('Error:', e.message || e)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
 
 router.post("/:id", upload.single("image"), tokenExtractor, babyFinder, async (req, res) => {
     try {

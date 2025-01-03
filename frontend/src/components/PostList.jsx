@@ -11,7 +11,7 @@ const Posts = ({ baby, user }) => {
 
     return (
         <>
-            {babyPosts.map((post) => <Post user={user} baby={baby} post={post} />)}
+            {babyPosts.map((post) => <Post key={post.id} user={user} baby={baby} post={post} />)}
         </>
     )
 }

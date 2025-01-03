@@ -16,9 +16,9 @@ const postSlice = createSlice({
 
 export const { setPosts, appendPost } = postSlice.actions
 
-export const initializePosts = () => {
+export const initializeUserPosts = () => {
     return async (dispatch) => {
-      const posts = await postService.getAll()
+      const posts = await postService.getUserPosts()
       dispatch(setPosts(posts))
     }
 }

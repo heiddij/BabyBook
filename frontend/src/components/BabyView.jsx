@@ -9,7 +9,7 @@ import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
-import Posts from "./Posts"
+import PostList from "./PostList"
 
 const BabyView = () => {
     const babies = useSelector((state) => state.babies)
@@ -97,7 +97,7 @@ const BabyView = () => {
                 {isLoggedUser && 
                     <BabyPostForm baby={baby} />
                 }
-                <Posts baby={baby} user={loggedUser} />
+                <PostList baby={baby} user={loggedUser} />
             </div>
         </div>
     )

@@ -6,8 +6,9 @@ import UserView from './components/UserView'
 import BabyView from './components/BabyView'
 import { initializeUsers } from './reducers/usersReducer'
 import { initializeBabies } from './reducers/babyReducer'
-import { initializePosts } from './reducers/postReducer'
+import { initializeUserPosts } from './reducers/postReducer'
 import { passUser } from './reducers/userReducer'
+import { initializeFollowedUsersPosts } from './reducers/followedPostsReducer'
 import LoginForm from './components/LoginForm'
 import babyService from './services/babies'
 import postService from './services/posts'
@@ -15,6 +16,7 @@ import followService from './services/follow'
 import UserForm from './components/UserForm'
 import Navigation from './components/Navigation'
 import Spinner from './components/Spinner'
+import FollowedPostsList from './components/FollowedPostList'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -23,21 +25,41 @@ const App = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(initializeUsers())
-      dispatch(initializeBabies())
-      dispatch(initializePosts())
+      try {
+        await Promise.all([
+          dispatch(initializeUsers()),
+          dispatch(initializeBabies()),
+        ])
+  
+        const loggedUserJSON = window.localStorage.getItem('loggedUser')
+        
+        if (loggedUserJSON) {
+          const user = JSON.parse(loggedUserJSON)
+          dispatch(passUser(user))
+  
+          babyService.setToken(user.token)
+          postService.setToken(user.token)
+          followService.setToken(user.token)
 
-      const loggedUserJSON = window.localStorage.getItem('loggedUser')
-      if (loggedUserJSON) {
-        const user = JSON.parse(loggedUserJSON)
-        dispatch(passUser(user))
-        babyService.setToken(user.token)
-        postService.setToken(user.token)
-        followService.setToken(user.token)
+          dispatch(initializeUserPosts())
+          dispatch(initializeFollowedUsersPosts())
+  
+          setLoading(false)
+
+          const interval = setInterval(() => {
+            dispatch(initializeFollowedUsersPosts())
+          }, 100000)
+  
+          return () => clearInterval(interval)
+        } else {
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error("Error during initialization:", error.message)
+        setLoading(false)
       }
-      setLoading(false)
     }
-
+  
     fetchData()
   }, [dispatch])
 
@@ -59,6 +81,7 @@ const App = () => {
         <Route path="/users/:id" element={<UserView />} />
         <Route path="/users/:id/:babyId" element={<BabyView />} />
         <Route path="/registration" element={<UserForm />} />
+        <Route path="/posts" element={<FollowedPostsList />} />
       </Routes>
     </div>
   )

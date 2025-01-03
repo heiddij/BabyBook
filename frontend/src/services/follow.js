@@ -14,6 +14,8 @@ const follow = async (id) => {
         }
     }
 
+    console.log(token)
+
     const response = await axios.post(`${baseUrl}/${id}`, {}, config)
     return response.data
 }

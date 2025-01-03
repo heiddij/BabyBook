@@ -7,16 +7,37 @@ const setToken = (newToken) => {
     token = `Bearer ${newToken}`
 }
 
-const getAll = () => {
-    const request = axios.get(baseUrl)
-    return request.then((response) => response.data)
+const getAll = async () => {
+    const response = await axios.get(baseUrl)
+    return response.data
+}
+
+const getUserPosts = async () => {
+    const config = {
+        headers: { 
+            Authorization: token
+        }
+    }
+
+    const response = await axios.get(`${baseUrl}/own`, config)
+    return response.data
+}
+
+const getPostsOfFollowedUsers = async () => {
+    const config = {
+        headers: { 
+            Authorization: token
+        }
+    }
+    const response = await axios.get(`${baseUrl}/following`, config)
+    return response.data
 }
   
 const create = async (babyId, formdata) => {
     const config = {
         headers: { 
-        Authorization: token,
-        "Content-Type": "multipart/form-data",
+            Authorization: token,
+            "Content-Type": "multipart/form-data",
         }
     }
 
@@ -24,4 +45,4 @@ const create = async (babyId, formdata) => {
     return response.data
 }
 
-export default { setToken, getAll, create }
+export default { setToken, getAll, create, getPostsOfFollowedUsers, getUserPosts }
