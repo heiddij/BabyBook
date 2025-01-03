@@ -16,7 +16,7 @@ const followRouter = require('./controllers/follow')
 
 app.use(cors())
 app.use(express.json())
-app.use(sanitization);
+app.use(sanitization)
 
 app.use('/api/users', usersRouter)
 app.use('/api/babies', babiesRouter)

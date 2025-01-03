@@ -30,36 +30,36 @@ const App = () => {
           dispatch(initializeUsers()),
           dispatch(initializeBabies()),
         ])
-  
+
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
-        
+
         if (loggedUserJSON) {
           const user = JSON.parse(loggedUserJSON)
           dispatch(passUser(user))
-  
+
           babyService.setToken(user.token)
           postService.setToken(user.token)
           followService.setToken(user.token)
 
           dispatch(initializeUserPosts())
           dispatch(initializeFollowedUsersPosts())
-  
+
           setLoading(false)
 
           const interval = setInterval(() => {
             dispatch(initializeFollowedUsersPosts())
           }, 100000)
-  
+
           return () => clearInterval(interval)
         } else {
           setLoading(false)
         }
       } catch (error) {
-        console.error("Error during initialization:", error.message)
+        console.error('Error during initialization:', error.message)
         setLoading(false)
       }
     }
-  
+
     fetchData()
   }, [dispatch])
 
@@ -71,7 +71,7 @@ const App = () => {
     window.localStorage.clear()
     dispatch(passUser(null))
   }
-  
+
   return (
     <div>
       { user && <Navigation handleLogout={handleLogout} user={user} /> }

@@ -6,7 +6,7 @@ const { SECRET } = require('../util/config')
 const User = require('../models/user')
 
 router.post('/', async (request, response) => {
-    const { username, password } = request.body
+  const { username, password } = request.body
 
   const user = await User.scope(null).findOne({ // Disable the default scope so that the passwordHash is included
     where: {

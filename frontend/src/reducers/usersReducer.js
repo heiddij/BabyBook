@@ -32,7 +32,7 @@ const usersSlice = createSlice({
     },
     unfollow(state, action) {
       const { followingId, followerId } = action.payload
-    
+
       return state.map((user) => {
         if (user.id === followingId) {
           return {

@@ -5,16 +5,16 @@ const { Umzug, SequelizeStorage } = require('umzug')
 const sequelize = new Sequelize(DATABASE_URL)
 
 const connectToDatabase = async () => {
-    try {
-      await sequelize.authenticate()
-      await runMigrations()
-      console.log('database connected')
-    } catch (err) {
-      console.log('connecting database failed')
-      return process.exit(1)
-    }
+  try {
+    await sequelize.authenticate()
+    await runMigrations()
+    console.log('database connected')
+  } catch (err) {
+    console.log(`connecting database failed: ${err.message}`)
+    return process.exit(1)
+  }
   
-    return null
+  return null
 }
 
 const migrationConf = {

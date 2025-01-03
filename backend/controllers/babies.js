@@ -12,36 +12,36 @@ const { Baby, User } = require('../models')
 
 router.get('/', async (req, res) => {
   try {
-      const babies = await Baby.findAll()
-      res.json(babies)
+    const babies = await Baby.findAll()
+    res.json(babies)
   } catch (error) {
-      console.error(error)
-      res.status(500).json({ error: "Server error" })
+    console.error(error)
+    res.status(500).json({ error: 'Server error' })
   }
 })
 
 router.get('/:id', babyFinder, async (req, res) => {
-if (req.baby) {
+  if (req.baby) {
     res.json(req.baby)
-} else {
+  } else {
     res.status(404).end()
-}
+  }
 })
 
-router.post("/", upload.single("profilepic"), tokenExtractor, async (req, res) => {
+router.post('/', upload.single('profilepic'), tokenExtractor, async (req, res) => {
   try {
     const user = await User.findByPk(req.decodedToken.id)
     let imageUrl = null
 
     if (!user) {
-      return response.status(400).json({ error: 'token missing or invalid' })
+      return res.status(400).json({ error: 'token missing or invalid' })
     }
 
     if (req.file) {
       const form = new FormData()
 
       form.append('key', process.env.IMGBB_API_KEY)
-      form.append('image', req.file.buffer.toString("base64"))
+      form.append('image', req.file.buffer.toString('base64'))
 
       const response = await axios.post(
         'https://api.imgbb.com/1/upload',
@@ -74,11 +74,11 @@ router.delete('/:id', babyFinder, tokenExtractor, async (req, res) => {
   const baby = req.baby
 
   if (baby.userId !== user.id) {
-    return response.status(400).json({ error: 'token missing or invalid' })
+    return res.status(400).json({ error: 'token missing or invalid' })
   }
 
   if (baby) {
-      await baby.destroy()
+    await baby.destroy()
   }
   res.status(204).end()
 })
@@ -89,43 +89,43 @@ router.put('/:id', upload.single('profilepic'), babyFinder, tokenExtractor, asyn
   const baby = req.baby
 
   if (baby.userId !== user.id) {
-    return response.status(400).json({ error: 'token missing or invalid' })
+    return res.status(400).json({ error: 'token missing or invalid' })
   }
 
   try {
-      if (baby) {
-          const { firstname, lastname, birthdate, birthplace } = req.body
-          let imageUrl = baby.profilepic
+    if (baby) {
+      const { firstname, lastname, birthdate, birthplace } = req.body
+      let imageUrl = baby.profilepic
 
-          if (req.file) {
-              const form = new FormData()
-              form.append('key', process.env.IMGBB_API_KEY)
-              form.append('image', req.file.buffer.toString("base64"))
+      if (req.file) {
+        const form = new FormData()
+        form.append('key', process.env.IMGBB_API_KEY)
+        form.append('image', req.file.buffer.toString('base64'))
 
-              const response = await axios.post('https://api.imgbb.com/1/upload', form, {
-                  headers: {
-                      ...form.getHeaders(),
-                  },
-              })
+        const response = await axios.post('https://api.imgbb.com/1/upload', form, {
+          headers: {
+            ...form.getHeaders(),
+          },
+        })
 
-              imageUrl = response.data.data.url
-          }
-
-          baby.firstname = firstname
-          baby.lastname = lastname
-          baby.birthdate = birthdate
-          baby.birthplace = birthplace
-          baby.profilepic = imageUrl
-
-          await baby.save() 
-
-          res.json(baby)
-      } else {
-          res.status(404).end()
+        imageUrl = response.data.data.url
       }
+
+      baby.firstname = firstname
+      baby.lastname = lastname
+      baby.birthdate = birthdate
+      baby.birthplace = birthplace
+      baby.profilepic = imageUrl
+
+      await baby.save() 
+
+      res.json(baby)
+    } else {
+      res.status(404).end()
+    }
   } catch (error) {
-      console.error('Error updating baby:', error)
-      res.status(500).json({ error: 'Server error' })
+    console.error('Error updating baby:', error)
+    res.status(500).json({ error: 'Server error' })
   }
 })
 
