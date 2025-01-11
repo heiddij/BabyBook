@@ -34,7 +34,7 @@ router.post('/', upload.single('profilepic'), tokenExtractor, async (req, res) =
     let imageUrl = null
 
     if (!user) {
-      return res.status(400).json({ error: 'token missing or invalid' })
+      return res.status(400).json({ error: 'Ei oikeutta' })
     }
 
     if (req.file) {

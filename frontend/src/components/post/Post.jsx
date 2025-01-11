@@ -1,7 +1,7 @@
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import { Avatar, Box, CardMedia, Typography } from '@mui/material'
-import { formatDateTime } from '../utils/formatDate'
+import { formatDateTime } from '../../utils/formatDate'
 
 const Post = ({ user, baby, post }) => {
   return (

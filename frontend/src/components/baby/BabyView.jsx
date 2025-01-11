@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState } from 'react'
 import BabyForm from './BabyForm'
 import BabyPostForm from './BabyPostForm'
-import { deleteBaby } from '../reducers/babyReducer'
-import { formatDate } from '../utils/formatDate'
+import { deleteBaby } from '../../reducers/babyReducer'
+import { formatDate } from '../../utils/formatDate'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
-import PostList from './PostList'
+import PostList from '../post/PostList'
 
 const BabyView = () => {
   const babies = useSelector((state) => state.babies)
@@ -70,16 +70,19 @@ const BabyView = () => {
         <p className="text-lg">{formatDate(baby.birthdate)}</p>
         <p className="text-lg">{baby.birthplace}</p>
         {isLoggedUser &&
-                    <div>
-                      <button onClick={handleModifyBaby}
-                        className="font-semibold hover:font-bold flex justify-self-center text-lg py-4">
-                        {buttonText}
-                      </button>
-                      <button onClick={handleClickOpen}
-                        className="font-semibold bg-my-pink hover:font-bold flex justify-self-center text-lg p-4">
-                            Poista
-                      </button>
-                    </div>
+          <div>
+            <button onClick={handleModifyBaby}
+              className="font-semibold hover:font-bold flex justify-self-center text-lg py-4"
+            >
+              {buttonText}
+            </button>
+            <button onClick={handleClickOpen}
+              className="font-semibold bg-my-pink hover:font-bold flex justify-self-center text-lg p-4"
+              data-testid="open-dialog-button"
+            >
+                  Poista
+            </button>
+          </div>
         }
         {modifyBaby && <BabyForm baby={baby} />}
         <Dialog
@@ -91,7 +94,14 @@ const BabyView = () => {
           </DialogTitle>
           <DialogActions>
             <Button onClick={handleClose}>Peruuta</Button>
-            <Button className="!text-red-400 hover:!bg-red-50" onClick={handleDeleteBaby} autoFocus>Poista</Button>
+            <Button
+              className="!text-red-400 hover:!bg-red-50"
+              onClick={handleDeleteBaby}
+              autoFocus
+              data-testid="confirm-delete-button"
+            >
+                Poista
+            </Button>
           </DialogActions>
         </Dialog>
         {isLoggedUser &&

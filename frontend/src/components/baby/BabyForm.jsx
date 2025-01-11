@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { createBaby, updateBaby } from '../reducers/babyReducer'
-import Input from './Input'
+import { createBaby, updateBaby } from '../../reducers/babyReducer'
+import Input from '../form/Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
 import { GrMail } from 'react-icons/gr'
-import { firstname_validation, lastname_validation, birthdate_validation, birthplace_validation, image_validation } from '../utils/inputValidations'
+import { firstname_validation, lastname_validation, birthdate_validation, birthplace_validation, image_validation } from '../../utils/inputValidations'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 
 const BabyForm = ({ baby = null }) => {

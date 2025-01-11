@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
-import Baby from './Baby'
-import BabyForm from './BabyForm'
+import Baby from '../baby/Baby'
+import BabyForm from '../baby/BabyForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { followUser, unfollowUser } from '../reducers/usersReducer'
+import { followUser, unfollowUser } from '../../reducers/usersReducer'
 
 const UserView = () => {
   const id = useParams().id

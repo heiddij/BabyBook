@@ -1,15 +1,17 @@
 import { useState } from 'react'
+import loginService from '../../services/login'
 import { useDispatch } from 'react-redux'
-import { createUser } from '../reducers/usersReducer'
-import Input from './Input'
+import { passUser } from '../../reducers/userReducer'
+import babyService from '../../services/babies'
+import Input from '../form/Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
-import { GrMail } from 'react-icons/gr'
+import { TbArrowBigRight } from 'react-icons/tb'
+import { usernamelogin_validation, passwordlogin_validation } from '../../utils/inputValidations'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
-import { firstname_validation, lastname_validation, usernamereg_validation, passwordreg_validation } from '../utils/inputValidations'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-const UserForm = () => {
+const LoginForm = () => {
   const methods = useForm()
   const dispatch = useDispatch()
   const [success, setSuccess] = useState(false)
@@ -17,21 +19,20 @@ const UserForm = () => {
   const navigate = useNavigate()
 
   const onSubmit = methods.handleSubmit(async data => {
-    const newUser = {
-      firstname: data.firstname,
-      lastname: data.lastname,
-      username: data.username,
-      password: data.password
-    }
-
     try {
-      await dispatch(createUser(newUser))
+      const user = await loginService.login({
+        username: data.username,
+        password: data.password
+      })
+
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+
+      babyService.setToken(user.token)
+      dispatch(passUser(user))
       methods.reset()
       setSuccess(true)
       setError('')
-      setTimeout(() => {
-        navigate('/login')
-      }, 2000)
+      navigate('/')
     } catch (exception) {
       setSuccess(false)
       setError(exception.response?.data?.error || 'Jokin meni vikaan')
@@ -40,23 +41,20 @@ const UserForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <h1>Rekisteröidy</h1>
+      <h1>Kirjaudu sisään</h1>
       <form
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
-        className="container"
       >
-        <div className="grid gap-5 md:grid-cols-2">
-          <Input {...firstname_validation} />
-          <Input {...lastname_validation} />
-          <Input {...usernamereg_validation} />
-          <Input {...passwordreg_validation} />
+        <div className="grid gap-5 grid-cols-1">
+          <Input {...usernamelogin_validation} />
+          <Input {...passwordlogin_validation} />
         </div>
         <div className="mt-5">
           {success && (
             <p className="flex items-center gap-1 mb-5 font-semibold text-green-500">
-              <BsFillCheckSquareFill /> Käyttäjän rekisteröinti onnistui
+              <BsFillCheckSquareFill /> Kirjautuminen onnistui
             </p>
           )}
           {error && (
@@ -66,15 +64,18 @@ const UserForm = () => {
           )}
           <button
             onClick={onSubmit}
-            className="flex items-center gap-1 p-5 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-800"
+            className="btn-primary"
           >
-            <GrMail />
-                        Tallenna
+            <TbArrowBigRight />
+          Kirjaudu
           </button>
+        </div>
+        <div className="mt-5">
+          <p>Ei vielä käyttäjätunnusta?</p> <Link to="/registration" className="font-semibold hover:font-bold">Rekisteröidy</Link>
         </div>
       </form>
     </FormProvider>
   )
 }
 
-export default UserForm
+export default LoginForm

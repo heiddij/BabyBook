@@ -1,32 +1,37 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { createPost } from '../reducers/postReducer'
-import Input from './Input'
+import { createUser } from '../../reducers/usersReducer'
+import Input from '../form/Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
 import { GrMail } from 'react-icons/gr'
-import { image_validation, post_validation } from '../utils/inputValidations'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
+import { firstname_validation, lastname_validation, usernamereg_validation, passwordreg_validation } from '../../utils/inputValidations'
+import { useNavigate } from 'react-router-dom'
 
-const BabyPostForm = ({ baby }) => {
+const UserForm = () => {
   const methods = useForm()
   const dispatch = useDispatch()
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const navigate = useNavigate()
 
-  const onSubmit = methods.handleSubmit(async (data) => {
-    const formData = new FormData()
-    formData.append('post', data.post)
-
-    if (data.image.length > 0) {
-      formData.append('image', data.image[0])
+  const onSubmit = methods.handleSubmit(async data => {
+    const newUser = {
+      firstname: data.firstname,
+      lastname: data.lastname,
+      username: data.username,
+      password: data.password
     }
 
     try {
-      dispatch(createPost(baby.id, formData))
+      await dispatch(createUser(newUser))
       methods.reset()
       setSuccess(true)
       setError('')
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000)
     } catch (exception) {
       setSuccess(false)
       setError(exception.response?.data?.error || 'Jokin meni vikaan')
@@ -35,21 +40,23 @@ const BabyPostForm = ({ baby }) => {
 
   return (
     <FormProvider {...methods}>
+      <h1>Rekisteröidy</h1>
       <form
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
-        className='my-4'
+        className="container"
       >
-        <h2>Tee julkaisu!</h2>
-        <div className="grid gap-5 grid-cols-1">
-          <Input {...post_validation} />
-          <Input {...image_validation} />
+        <div className="grid gap-5 md:grid-cols-2">
+          <Input {...firstname_validation} />
+          <Input {...lastname_validation} />
+          <Input {...usernamereg_validation} />
+          <Input {...passwordreg_validation} />
         </div>
         <div className="mt-5">
           {success && (
             <p className="flex items-center gap-1 mb-5 font-semibold text-green-500">
-              <BsFillCheckSquareFill /> Julkaisu onnistui
+              <BsFillCheckSquareFill /> Käyttäjän rekisteröinti onnistui
             </p>
           )}
           {error && (
@@ -59,10 +66,10 @@ const BabyPostForm = ({ baby }) => {
           )}
           <button
             onClick={onSubmit}
-            className="btn-primary"
+            className="flex items-center gap-1 p-5 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-800"
           >
             <GrMail />
-                  Julkaise
+                        Tallenna
           </button>
         </div>
       </form>
@@ -70,4 +77,4 @@ const BabyPostForm = ({ baby }) => {
   )
 }
 
-export default BabyPostForm
+export default UserForm

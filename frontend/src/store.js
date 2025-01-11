@@ -5,14 +5,23 @@ import userReducer from './reducers/userReducer'
 import postReducer from './reducers/postReducer'
 import followedPostsReducer from './reducers/followedPostsReducer'
 
+const rootReducer = {
+  users: usersReducer,
+  user: userReducer,
+  babies: babyReducer,
+  posts: postReducer,
+  followedPosts: followedPostsReducer
+}
+
 const store = configureStore({
-  reducer: {
-    users: usersReducer,
-    user: userReducer,
-    babies: babyReducer,
-    posts: postReducer,
-    followedPosts: followedPostsReducer
-  }
+  reducer: rootReducer
 })
+
+export const setupStore = preloadedState => {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState
+  })
+}
 
 export default store

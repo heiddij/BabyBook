@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import { CardHeader, CardMedia } from '@mui/material'
 
 
