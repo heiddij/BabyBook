@@ -24,7 +24,7 @@ vi.mock('../post/PostList', () => ({
   default: () => <div data-testid="post-list">PostList Component</div>,
 }))
 
-describe('BabyView', () => {
+describe('BabyView Component', () => {
   const baby = {
     id: 1,
     firstname: 'John',

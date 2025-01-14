@@ -6,7 +6,7 @@ import { formatDateTime } from '../../utils/formatDate'
 const Post = ({ user, baby, post }) => {
   return (
     <>
-      <Card sx={{ width: 500, marginY: 4 }}>
+      <Card sx={{ width: 500, marginY: 4 }} data-testid="post-card">
         <CardContent sx={{ wordWrap: 'break-word', overflow: 'hidden' }}>
           <Box marginBottom={2}>
             <h2 className='text-2xl'>{user.username}</h2>

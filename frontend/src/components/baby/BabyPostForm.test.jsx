@@ -4,7 +4,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useDispatch } from 'react-redux'
 import BabyPostForm from './BabyPostForm'
 import { createPost } from '../../reducers/postReducer'
-import * as postService from '../../services/posts'
 
 vi.mock('react-redux', () => ({
   useDispatch: vi.fn(),
@@ -14,13 +13,9 @@ vi.mock('../../reducers/postReducer', () => ({
   createPost: vi.fn(() => (dispatch) => Promise.resolve())
 }))
 
-/* vi.mock('../../services/posts', () => ({
-  create: vi.fn(),
-})) */
-
-describe('BabyPostForm', () => {
+describe('BabyPostForm Component', () => {
   const mockDispatch = vi.fn()
-  const baby = { id: 1 }
+  const baby = { id: 1, firstname: 'John', lastname: 'Doe' }
 
   beforeEach(() => {
     useDispatch.mockReturnValue(mockDispatch)
@@ -57,8 +52,14 @@ describe('BabyPostForm', () => {
   })
 
   it('shows an error message on submission failure', async () => {
-    const errorMessage = 'Jokin meni vikaan'
-    postService.create.mockRejectedValueOnce(new Error(errorMessage))
+    const error = {
+      response: {
+        data: {
+          error: 'Virhe tallennuksessa',
+        },
+      },
+    }
+    mockDispatch.mockRejectedValueOnce(error)
 
     render(<BabyPostForm baby={baby} />)
 
@@ -67,7 +68,11 @@ describe('BabyPostForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /julkaise/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(new RegExp(errorMessage, 'i'))).toBeInTheDocument()
+      expect(mockDispatch).toHaveBeenCalled()
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/virhe tallennuksessa/i)).toBeInTheDocument()
     })
   })
 

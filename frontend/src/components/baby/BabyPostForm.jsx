@@ -23,7 +23,7 @@ const BabyPostForm = ({ baby }) => {
     }
 
     try {
-      dispatch(createPost(baby.id, formData))
+      await dispatch(createPost(baby.id, formData))
       methods.reset()
       setSuccess(true)
       setError('')

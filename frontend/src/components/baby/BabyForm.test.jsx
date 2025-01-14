@@ -4,7 +4,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useDispatch } from 'react-redux'
 import { createBaby, updateBaby } from '../../reducers/babyReducer'
 import BabyForm from './BabyForm'
-import * as babyService from '../../services/babies'
 
 vi.mock('react-redux', () => ({
   useDispatch: vi.fn(),
@@ -15,11 +14,7 @@ vi.mock('../../reducers/babyReducer', () => ({
   updateBaby: vi.fn(() => (dispatch) => Promise.resolve())
 }))
 
-vi.mock('../../services/babies', () => ({
-  create: vi.fn(), // Mock the create function
-}))
-
-describe('BabyForm component', () => {
+describe('BabyForm Component', () => {
   const mockDispatch = vi.fn()
   beforeEach(() => {
     useDispatch.mockReturnValue(mockDispatch)
@@ -87,8 +82,14 @@ describe('BabyForm component', () => {
   })
 
   it('shows error message on submission failure', async () => {
-    const mError = new Error('Virhe tallennuksessa')
-    createBaby.mockRejectedValueOnce(mError)
+    const error = {
+      response: {
+        data: {
+          error: 'Virhe tallennuksessa',
+        },
+      },
+    }
+    mockDispatch.mockRejectedValueOnce(error)
 
     render(<BabyForm />)
 
@@ -111,10 +112,8 @@ describe('BabyForm component', () => {
   it('renders validation error if required fields are not filled', async () => {
     render(<BabyForm />)
 
-    // Click submit without filling out the form
     fireEvent.click(screen.getByRole('button', { name: /tallenna/i }))
 
-    // Wait for validation errors to appear
     await waitFor(() => {
       expect(screen.getByText(/kirjoita etunimi/i)).toBeInTheDocument()
       expect(screen.getByText(/kirjoita sukunimi/i)).toBeInTheDocument()
