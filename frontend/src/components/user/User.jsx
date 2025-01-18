@@ -7,7 +7,10 @@ const User = ({ user }) => {
   return (
     <>
       <Link to={`/users/${user.id}`}>
-        <Card className="!bg-my-green !text-center transform transition-transform hover:scale-105 hover:shadow-xl">
+        <Card
+          className="!bg-my-green !text-center transform transition-transform hover:scale-105 hover:shadow-xl"
+          data-testid="user-card"
+        >
           <CardHeader title={user.username} />
           <CardContent className='flex !justify-center'>
             <AvatarGroup max={4}>

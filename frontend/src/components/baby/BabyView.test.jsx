@@ -10,7 +10,7 @@ vi.mock('../../reducers/babyReducer', async (importOriginal) => {
   return {
     ...actual,
     default: actual.default,
-    deleteBaby: vi.fn(),
+    deleteBaby: vi.fn(() => ({ type: 'babies/deleteBaby' })),
   }
 })
 

@@ -9,7 +9,7 @@ const UserList = () => {
       <h1>BabyBook käyttäjät</h1>
       <div className="container">
         <div className="grid gap-5 md:grid-cols-3">
-          {users ? (users.map(user =>
+          {users.length > 0 ? (users.map(user =>
             <User key={user.id} user={user} />
           )) : <p>Babybookilla ei ole vielä käyttäjiä!</p>}
         </div>
