@@ -55,6 +55,7 @@ const Post = ({ user, baby, post }) => {
         }
         <ToggleButton
           value="check"
+          data-testid="like-button"
           selected={selected}
           sx={{ border: 'none', backgroundColor: 'transparent !important', color: '#EED3D9 !important' }}
           onChange={selected ? handleUnlike : handleLike}

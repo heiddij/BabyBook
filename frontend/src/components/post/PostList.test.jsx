@@ -12,21 +12,24 @@ describe('PostList Component', () => {
       createdAt: '2023-01-01T14:00:00+02:00',
       post: 'First baby post',
       image: '/image1.jpg',
-      babyId: 1
+      babyId: 1,
+      likers: []
     },
     {
       id: 2,
       createdAt: '2023-01-02T14:00:00+02:00',
       post: 'Second baby post',
       image: '/image2.jpg',
-      babyId: 1
+      babyId: 1,
+      likers: []
     },
     {
       id: 3,
       createdAt: '2023-01-03T14:00:00+02:00',
       post: 'Unrelated post',
       image: '/image3.jpg',
-      babyId: 2
+      babyId: 2,
+      likers: []
     }
   ]
 

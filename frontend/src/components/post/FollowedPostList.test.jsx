@@ -11,7 +11,8 @@ describe('FollowedPostsList Component', () => {
       post: 'First followed post',
       image: '/image1.jpg',
       followingUser: { username: 'user1' },
-      baby: { id: 1, firstname: 'Baby1', profilepic: '/baby1.jpg' }
+      baby: { id: 1, firstname: 'Baby1', profilepic: '/baby1.jpg' },
+      likers : []
     },
     {
       id: 2,
@@ -19,7 +20,8 @@ describe('FollowedPostsList Component', () => {
       post: 'Second followed post',
       image: '/image2.jpg',
       followingUser: { username: 'user2' },
-      baby: { id: 2, firstname: 'Baby2', profilepic: '/baby2.jpg' }
+      baby: { id: 2, firstname: 'Baby2', profilepic: '/baby2.jpg' },
+      likers : []
     }
   ]
 
