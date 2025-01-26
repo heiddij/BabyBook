@@ -13,6 +13,7 @@ import LoginForm from './components/login/LoginForm'
 import babyService from './services/babies'
 import postService from './services/posts'
 import followService from './services/follow'
+import loginService from './services/login'
 import UserForm from './components/user/UserForm'
 import Navigation from './components/layout/Navigation'
 import Spinner from './components/ui/Spinner'
@@ -69,8 +70,35 @@ const App = () => {
     return <Spinner />
   }
 
+  const handleLogin = async (data) => {
+    try {
+      const user = await loginService.login({
+        username: data.username,
+        password: data.password,
+      })
+
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+
+      babyService.setToken(user.token)
+      postService.setToken(user.token)
+      followService.setToken(user.token)
+
+      dispatch(passUser(user))
+      await dispatch(initializeFollowedUsersPosts())
+      await dispatch(initializeUserPosts())
+
+      return { success: true, error: null }
+    } catch (exception) {
+      const errorMessage = exception.response?.data?.error || 'Jokin meni vikaan'
+      return { success: false, error: errorMessage }
+    }
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
+    babyService.setToken(null)
+    postService.setToken(null)
+    followService.setToken(null)
     dispatch(passUser(null))
     navigate('/login')
   }
@@ -79,7 +107,7 @@ const App = () => {
     <div>
       { user && <Navigation handleLogout={handleLogout} user={user} /> }
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
+        <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
         <Route path="/" element={user ? <FollowedPostsList /> : <Navigate replace to="/login" />} />
         <Route path="/users/:id" element={<UserView />} />
         <Route path="/users/:id/:babyId" element={<BabyView />} />

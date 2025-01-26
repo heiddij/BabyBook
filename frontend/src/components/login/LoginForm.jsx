@@ -1,8 +1,4 @@
 import { useState } from 'react'
-import loginService from '../../services/login'
-import { useDispatch } from 'react-redux'
-import { passUser } from '../../reducers/userReducer'
-import babyService from '../../services/babies'
 import Input from '../form/Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
@@ -11,31 +7,23 @@ import { usernamelogin_validation, passwordlogin_validation } from '../../utils/
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 import { Link, useNavigate } from 'react-router-dom'
 
-const LoginForm = () => {
+const LoginForm = ({ handleLogin }) => {
   const methods = useForm()
-  const dispatch = useDispatch()
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
   const onSubmit = methods.handleSubmit(async data => {
-    try {
-      const user = await loginService.login({
-        username: data.username,
-        password: data.password
-      })
+    const result = await handleLogin(data)
 
-      window.localStorage.setItem('loggedUser', JSON.stringify(user))
-
-      babyService.setToken(user.token)
-      dispatch(passUser(user))
+    if (result.success) {
       methods.reset()
       setSuccess(true)
       setError('')
       navigate('/')
-    } catch (exception) {
+    } else {
       setSuccess(false)
-      setError(exception.response?.data?.error || 'Jokin meni vikaan')
+      setError(result.error)
     }
   })
 

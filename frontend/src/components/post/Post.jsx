@@ -13,21 +13,25 @@ import { useSelector } from 'react-redux'
 
 const Post = ({ user, baby, post }) => {
   const [selected, setSelected] = useState(false)
+  const [likes, setLikes] = useState(0)
   const dispatch = useDispatch()
   const loggedUser = useSelector((state) => state.user)
 
   useEffect(() => {
+    setLikes(post.likers.length)
     const isLiked = post.likers.some((liker) => liker.id === loggedUser.id)
     setSelected(isLiked)
   }, [loggedUser, post.likers])
 
   const handleLike = () => {
     setSelected(true)
+    setLikes(likes + 1)
     dispatch(likePost(post.id))
   }
 
   const handleUnlike = () => {
     setSelected(false)
+    setLikes(likes - 1)
     dispatch(unlikePost(post.id))
   }
 
@@ -53,15 +57,18 @@ const Post = ({ user, baby, post }) => {
             alt="Baby's post"
           />
         }
-        <ToggleButton
-          value="check"
-          data-testid="like-button"
-          selected={selected}
-          sx={{ border: 'none', backgroundColor: 'transparent !important', color: '#EED3D9 !important' }}
-          onChange={selected ? handleUnlike : handleLike}
-        >
-          {selected ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </ToggleButton>
+        <Box display="flex" alignItems="center" marginBottom={2}>
+          <ToggleButton
+            value="check"
+            data-testid="like-button"
+            selected={selected}
+            sx={{ border: 'none', backgroundColor: 'transparent !important', color: '#EED3D9 !important', paddingRight: 0.5 }}
+            onChange={selected ? handleUnlike : handleLike}
+          >
+            {selected ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          </ToggleButton>
+          {likes > 0 && <Typography>{likes}</Typography>}
+        </Box>
       </Card>
     </>
   )
