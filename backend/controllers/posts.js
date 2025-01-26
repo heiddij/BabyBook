@@ -8,7 +8,7 @@ require('dotenv').config()
 
 const tokenExtractor = require('../middlewares/tokenExtractor')
 const babyFinder = require('../middlewares/babyFinder')
-const { Post, User, Baby } = require('../models')
+const { Post, User, Baby, Like } = require('../models')
 
 router.get('/', async (req, res) => {
   try {
@@ -26,7 +26,11 @@ router.get('/own', tokenExtractor, async (req, res) => {
       include: [
         { model: Baby,
           include: [
-            { model: Post }
+            { model: Post,
+              include: [
+                { model: User, as: 'likers' }
+              ]
+             }
           ]
         }
       ]
@@ -55,7 +59,10 @@ router.get('/following', tokenExtractor, async (req, res) => {
               include: [
                 { 
                   model: Post, 
-                  attributes: ['id', 'post', 'image', 'createdAt'], 
+                  attributes: ['id', 'post', 'image', 'createdAt'],
+                  include: [
+                    { model: User, as: 'likers' }
+                  ]
                 }
               ]
             }
@@ -67,10 +74,11 @@ router.get('/following', tokenExtractor, async (req, res) => {
     const followedUsersBabiesPosts = user.following.flatMap(followedUser => 
       followedUser.babies.flatMap(baby => 
         baby.posts.map(post => ({
-          postId: post.id,
+          id: post.id,
           post: post.post,
           image: post.image,
           createdAt: post.createdAt,
+          likers: post.likers,
           baby: {
             id: baby.id,
             firstname: baby.firstname,
@@ -99,7 +107,7 @@ router.post('/:id', upload.single('image'), tokenExtractor, babyFinder, async (r
     let imageUrl = null
   
     if (!user) {
-      return res.status(400).json({ error: 'token missing or invalid' })
+      return res.status(400).json({ error: 'Token puuttuu tai on virheellinen' })
     }
   
     if (req.file) {
@@ -130,6 +138,63 @@ router.post('/:id', upload.single('image'), tokenExtractor, babyFinder, async (r
     res.json(post)
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
+router.post('/:id/like', tokenExtractor, async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id)
+    const user = await User.findByPk(req.decodedToken.id)
+  
+    if (!user) {
+      return res.status(400).json({ error: 'Token puuttuu tai on virheellinen' })
+    }
+
+    if (!post) {
+      return res.status(404).json({ error: 'Julkaisua ei löydy' })
+    }
+
+    const existingLike = await Like.findOne({ where: { postId: post.id, userId: user.id } })
+    if (existingLike) {
+      return res.status(400).json({ error: 'Julkaisusta on jo tykätty' })
+    }
+
+    await Like.create({ userId: user.id, postId: post.id })
+  
+    const updatedPost = await Post.findByPk(req.params.id, {
+      include: [{ model: User, as: 'likers' }]
+    })
+
+    res.status(200).json(updatedPost)
+  } catch (error) {
+    console.error('Error:', error.message || error)
+    res.status(500).json({ error: 'Server error' })
+  }
+})
+
+router.delete('/:id/unlike', tokenExtractor, async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id)
+    const user = await User.findByPk(req.decodedToken.id)
+  
+    if (!user) {
+      return res.status(400).json({ error: 'Token puuttuu tai on virheellinen' })
+    }
+
+    if (!post) {
+      return res.status(404).json({ error: 'Julkaisua ei löydy' })
+    }
+    
+    await Like.destroy({ where: { userId: user.id, postId: post.id } })
+
+    const updatedPost = await Post.findByPk(req.params.id, {
+      include: [{ model: User, as: 'likers' }]
+    })
+  
+    res.json(updatedPost)
+  } catch (error) {
+    console.error('Error:', error.message || error)
     res.status(500).json({ error: 'Server error' })
   }
 })

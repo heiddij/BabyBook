@@ -7,8 +7,6 @@ router.post('/:id', tokenExtractor, async (req, res) => {
   const followerId = req.decodedToken.id
   const followingId = parseInt(req.params.id)
 
-  console.log(followerId, followingId)
-
   if (followerId === followingId) {
     return res.status(400).json({ error: 'Käyttäjä ei voi seurata itseään.' })
   }

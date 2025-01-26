@@ -19,7 +19,7 @@ const UserView = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (user) {
+    if (user && loggedUser) {
       const followerIds = user.followers ? user.followers.map((u) => u.id) : []
       if (followerIds.includes(loggedUser.id)) {
         setFollowButtonText('Lopeta seuraaminen')
@@ -33,6 +33,10 @@ const UserView = () => {
 
   if (!user) {
     return <p>Käyttäjää ei löydy</p>
+  }
+
+  if (!loggedUser) {
+    return <p>Kirjaudu sisään nähdäksesi käyttäjän tiedot</p>
   }
 
   const handleAddBaby = () => {

@@ -17,11 +17,13 @@ import UserForm from './components/user/UserForm'
 import Navigation from './components/layout/Navigation'
 import Spinner from './components/ui/Spinner'
 import FollowedPostsList from './components/post/FollowedPostList'
+import { useNavigate } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +72,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear()
     dispatch(passUser(null))
+    navigate('/login')
   }
 
   return (
@@ -77,11 +80,11 @@ const App = () => {
       { user && <Navigation handleLogout={handleLogout} user={user} /> }
       <Routes>
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/" element={user ? <UserList /> : <Navigate replace to="/login" />} />
+        <Route path="/" element={user ? <FollowedPostsList /> : <Navigate replace to="/login" />} />
         <Route path="/users/:id" element={<UserView />} />
         <Route path="/users/:id/:babyId" element={<BabyView />} />
         <Route path="/registration" element={<UserForm />} />
-        <Route path="/posts" element={<FollowedPostsList />} />
+        <Route path="/users" element={<UserList />} />
       </Routes>
     </div>
   )

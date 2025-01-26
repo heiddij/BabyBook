@@ -26,6 +26,10 @@ const BabyView = () => {
     return <p>Vauvaa ei löydy</p>
   }
 
+  if (!loggedUser) {
+    return <p>Kirjaudu sisään nähdäksesi vauvan tiedot</p>
+  }
+
   const isLoggedUser = loggedUser.id === baby.userId
 
   const handleModifyBaby = () => {

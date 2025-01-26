@@ -45,4 +45,26 @@ const create = async (babyId, formdata) => {
   return response.data
 }
 
-export default { setToken, getAll, create, getPostsOfFollowedUsers, getUserPosts }
+const like = async (postId) => {
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+
+  const response = await axios.post(`${baseUrl}/${postId}/like`, {}, config)
+  return response.data
+}
+
+const unlike = async (postId) => {
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+
+  const response = await axios.delete(`${baseUrl}/${postId}/unlike`, config)
+  return response.data
+}
+
+export default { setToken, getAll, create, getPostsOfFollowedUsers, getUserPosts, like, unlike }

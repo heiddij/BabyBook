@@ -2,6 +2,7 @@ const User = require('./user')
 const Baby = require('./baby')
 const Post = require('./post')
 const Follow = require('./follow')
+const Like = require('./like')
 
 // ManyToOne
 User.hasMany(Baby)
@@ -17,7 +18,6 @@ User.belongsToMany(User, {
   foreignKey: 'followingId', 
   otherKey: 'followerId',
 })
-
 User.belongsToMany(User, { 
   through: Follow, 
   as: 'following', 
@@ -25,4 +25,7 @@ User.belongsToMany(User, {
   otherKey: 'followingId',
 })
 
-module.exports = { User, Baby, Post, Follow }
+User.belongsToMany(Post, { through: Like, as: 'likes' })
+Post.belongsToMany(User, { through: Like, as: 'likers' })
+
+module.exports = { User, Baby, Post, Follow, Like }

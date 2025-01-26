@@ -6,7 +6,7 @@ import { renderWithStore } from '../../utils/test-utils'
 describe('FollowedPostsList Component', () => {
   const mockFollowedPosts = [
     {
-      postId: 1,
+      id: 1,
       createdAt: '2023-01-01T14:00:00+02:00',
       post: 'First followed post',
       image: '/image1.jpg',
@@ -14,7 +14,7 @@ describe('FollowedPostsList Component', () => {
       baby: { id: 1, firstname: 'Baby1', profilepic: '/baby1.jpg' }
     },
     {
-      postId: 2,
+      id: 2,
       createdAt: '2023-01-02T14:00:00+02:00',
       post: 'Second followed post',
       image: '/image2.jpg',
