@@ -1,9 +1,42 @@
-import { screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { screen, waitFor, act } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import FollowedPostList from './FollowedPostList'
 import { renderWithStore } from '../../utils/test-utils'
+import { initializeFollowedUsersPosts } from '../../reducers/followedPostsReducer'
+import { useDispatch } from 'react-redux'
+
+
+vi.mock(import('react-redux'), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    useDispatch: vi.fn()
+  }
+})
+
+vi.mock('../../reducers/followedPostsReducer', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    default: actual.default,
+    initializeFollowedUsersPosts: vi.fn(() => async (dispatch) => {
+      dispatch({ type: 'followedPosts/initializeFollowedUsersPosts' })
+      return Promise.resolve()
+    }),
+  }
+})
+
+vi.mock('../ui/Spinner', () => ({
+  default: () => <div>Loading...</div>,
+}))
 
 describe('FollowedPostsList Component', () => {
+  const mockDispatch = vi.fn()
+  beforeEach(() => {
+    useDispatch.mockReturnValue(mockDispatch)
+    vi.clearAllMocks()
+  })
+
   const mockFollowedPosts = [
     {
       id: 1,
@@ -25,14 +58,41 @@ describe('FollowedPostsList Component', () => {
     }
   ]
 
-  it('renders the heading "BabyBook"', () => {
-    renderWithStore(<FollowedPostList />)
+  it('renders the Spinner while loading', () => {
+    initializeFollowedUsersPosts.mockReturnValue(() => new Promise(() => {}))
+
+    act(() => {
+      renderWithStore(<FollowedPostList />, {
+        preloadedState: { followedPosts: [] }
+      })
+    })
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
+  })
+
+  it('renders the heading "BabyBook"', async () => {
+    initializeFollowedUsersPosts.mockResolvedValueOnce(mockFollowedPosts)
+
+    renderWithStore(<FollowedPostList />, {
+      preloadedState: { followedPosts: mockFollowedPosts }
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
+    })
+
     expect(screen.getByText('BabyBook')).toBeInTheDocument()
   })
 
-  it('renders the followed posts in descending order by date', () => {
+  it('renders the followed posts in descending order by date', async () => {
+    initializeFollowedUsersPosts.mockResolvedValueOnce(mockFollowedPosts)
+
     renderWithStore(<FollowedPostList />, {
       preloadedState: { followedPosts: mockFollowedPosts }
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
     })
 
     const posts = screen.getAllByText(/followed post/i)
@@ -42,17 +102,29 @@ describe('FollowedPostsList Component', () => {
     expect(posts[1]).toHaveTextContent('First followed post')
   })
 
-  it('renders "Ei julkaisuja saatavilla" when there are no followed posts', () => {
+  it('renders "Ei julkaisuja saatavilla" when there are no followed posts', async () => {
+    initializeFollowedUsersPosts.mockResolvedValue([])
+
     renderWithStore(<FollowedPostList />, {
       preloadedState: { followedPosts: [] }
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
     })
 
     expect(screen.getByText('Ei julkaisuja saatavilla')).toBeInTheDocument()
   })
 
-  it('renders post details correctly', () => {
+  it('renders post details correctly', async () => {
+    initializeFollowedUsersPosts.mockResolvedValueOnce(mockFollowedPosts)
+
     renderWithStore(<FollowedPostList />, {
       preloadedState: { followedPosts: [mockFollowedPosts[0]] }
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
     })
 
     expect(screen.getByText('user1')).toBeInTheDocument()

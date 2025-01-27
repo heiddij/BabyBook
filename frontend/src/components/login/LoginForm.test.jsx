@@ -27,6 +27,8 @@ vi.mock('../../services/babies', async (importOriginal) => {
 })
 
 describe('LoginForm Component', () => {
+  const mockHandleLogin = vi.fn()
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -34,7 +36,7 @@ describe('LoginForm Component', () => {
   const renderComponent = () =>
     renderWithStore(
       <MemoryRouter>
-        <LoginForm />
+        <LoginForm handleLogin={mockHandleLogin} />
       </MemoryRouter>,
       {
         preloadedState: {},
@@ -63,68 +65,63 @@ describe('LoginForm Component', () => {
 
   it('handles successful login', async () => {
     const user = {
-      token: 'test-token',
       username: 'testuser',
-      id: 1,
+      password: 'password',
     }
-    loginService.login.mockResolvedValue(user)
+    mockHandleLogin.mockResolvedValue({ success: true, error: null })
 
-    const { store } = renderComponent()
+    renderComponent()
 
-    fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: 'testuser' } })
-    fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: 'password' } })
+    fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: user.username } })
+    fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: user.password } })
 
     fireEvent.click(screen.getByRole('button', { name: /kirjaudu/i }))
 
     await waitFor(() => {
-      expect(loginService.login).toHaveBeenCalledWith({
-        username: 'testuser',
-        password: 'password',
-      })
-      expect(babyService.setToken).toHaveBeenCalledWith('test-token')
-      expect(store.getState().user).toEqual(user)
+      expect(mockHandleLogin).toHaveBeenCalledWith(user)
     })
 
     expect(screen.getByText(/kirjautuminen onnistui/i)).toBeInTheDocument()
   })
 
   it('handles login failure', async () => {
-    loginService.login.mockRejectedValue({
-      response: { data: { error: 'Virheellinen käyttäjänimi tai salasana' } },
-    })
+    const user = {
+      username: 'testuser',
+      password: 'password',
+    }
+    const errorMessage = 'Virheellinen käyttäjänimi tai salasana'
+    mockHandleLogin.mockResolvedValue({ success: false, error: errorMessage })
 
     renderComponent()
 
-    fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: 'wronguser' } })
-    fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: 'wrongpassword' } })
+    fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: user.username } })
+    fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: user.password } })
 
     fireEvent.click(screen.getByRole('button', { name: /kirjaudu/i }))
 
     await waitFor(() => {
-      expect(loginService.login).toHaveBeenCalledWith({
-        username: 'wronguser',
-        password: 'wrongpassword',
-      })
+      expect(mockHandleLogin).toHaveBeenCalledWith(user)
     })
 
-    expect(screen.getByText(/virheellinen käyttäjänimi tai salasana/i)).toBeInTheDocument()
+    expect(screen.getByText(errorMessage)).toBeInTheDocument()
   })
 
   it('displays a generic error message on unknown error', async () => {
-    loginService.login.mockRejectedValue({})
+    const user = {
+      username: 'testuser',
+      password: 'password',
+    }
+    mockHandleLogin.mockResolvedValue({ success: false, error: null })
 
     renderComponent()
 
-    fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: 'testuser' } })
-    fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: 'password' } })
+    fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: user.username } })
+    fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: user.password } })
 
     fireEvent.click(screen.getByRole('button', { name: /kirjaudu/i }))
 
     await waitFor(() => {
-      expect(loginService.login).toHaveBeenCalledWith({
-        username: 'testuser',
-        password: 'password',
-      })
+      expect(mockHandleLogin).toHaveBeenCalledWith(user)
     })
 
     expect(screen.getByText(/jokin meni vikaan/i)).toBeInTheDocument()

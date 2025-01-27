@@ -23,7 +23,7 @@ const LoginForm = ({ handleLogin }) => {
       navigate('/')
     } else {
       setSuccess(false)
-      setError(result.error)
+      setError(result.error || 'Jokin meni vikaan')
     }
   })
 
