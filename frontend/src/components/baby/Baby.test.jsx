@@ -15,12 +15,22 @@ describe('Baby component', () => {
   it('renders the baby link with the correct URL', () => {
     render(
       <MemoryRouter>
-        <Baby baby={babyMock} userId={userIdMock} />
+        <Baby baby={babyMock} userId={userIdMock} isFollowing={true} />
       </MemoryRouter>
     )
 
     const link = screen.getByRole('link')
     expect(link).toHaveAttribute('href', `/users/${userIdMock}/${babyMock.id}`)
+  })
+
+  it('Doesn\'t render the baby link if isFollowing is false', () => {
+    render(
+      <MemoryRouter>
+        <Baby baby={babyMock} userId={userIdMock} isFollowing={false} />
+      </MemoryRouter>
+    )
+
+    expect(screen.queryByRole('link')).not.toBeInTheDocument()
   })
 
   it('renders the baby firstname in the CardHeader', () => {

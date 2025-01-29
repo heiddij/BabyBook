@@ -22,6 +22,7 @@ describe('Navigation Component', () => {
 
     expect(screen.getByText(/etusivu/i)).toBeInTheDocument()
     expect(screen.getByText(/omat sivut/i)).toBeInTheDocument()
+    expect(screen.getByText(/käyttäjät/i)).toBeInTheDocument()
     expect(screen.getByText(/kirjaudu ulos/i)).toBeInTheDocument()
   })
 
@@ -37,6 +38,13 @@ describe('Navigation Component', () => {
 
     const userLink = screen.getByText('Omat sivut')
     expect(userLink).toHaveAttribute('href', `/users/${user.id}`)
+  })
+
+  it('renders the users link with the correct URL', () => {
+    renderComponent()
+
+    const userLink = screen.getByText('Käyttäjät')
+    expect(userLink).toHaveAttribute('href', '/users')
   })
 
   it('renders the logout button and handles click event', () => {

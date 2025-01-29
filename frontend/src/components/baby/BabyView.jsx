@@ -13,8 +13,11 @@ import PostList from '../post/PostList'
 
 const BabyView = () => {
   const babies = useSelector((state) => state.babies)
-  const id = useParams().babyId
-  const baby = babies.find((b) => b.id === Number(id))
+  const users = useSelector((state) => state.users)
+  const babyId = useParams().babyId
+  const userId = useParams().id
+  const baby = babies.find((b) => b.id === Number(babyId))
+  const user = users.find((u) => u.id === Number(userId))
   const loggedUser = useSelector((state) => state.user)
   const [modifyBaby, setModifyBaby] = useState(false)
   const [buttonText, setButtonText] = useState('Muokkaa tietoja')
@@ -109,9 +112,9 @@ const BabyView = () => {
           </DialogActions>
         </Dialog>
         {isLoggedUser &&
-                    <BabyPostForm baby={baby} />
+          <BabyPostForm baby={baby} />
         }
-        <PostList baby={baby} user={loggedUser} />
+        <PostList baby={baby} user={user} />
       </div>
     </div>
   )

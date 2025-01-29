@@ -9,7 +9,7 @@ const UserView = () => {
   const id = useParams().id
   const users = useSelector((state) => state.users)
   const user = users.find((u) => u.id === Number(id))
-  const babies = useSelector((state) => state.babies) // this is because the users state is not updated when adding baby
+  const babies = useSelector((state) => state.babies)
   const userBabies = user ? babies.filter((b) => b.userId === user.id) : []
   const loggedUser = useSelector((state) => state.user)
   const [addBaby, setAddBaby] = useState(false)
@@ -48,11 +48,19 @@ const UserView = () => {
   }
 
   const handleFollowUser = async () => {
-    dispatch(followUser(loggedUser.id, user.id))
+    try {
+      dispatch(followUser(loggedUser.id, user.id))
+    } catch (error) {
+      console.log('Error following user:', error)
+    }
   }
 
   const handleUnfollowUser = async () => {
-    dispatch(unfollowUser(loggedUser.id, user.id))
+    try {
+      dispatch(unfollowUser(loggedUser.id, user.id))
+    } catch (error) {
+      console.log('Error unfollowing user:', error)
+    }
   }
 
   return (
@@ -62,7 +70,7 @@ const UserView = () => {
         <div className="grid gap-5 md:grid-cols-3">
           {userBabies.length > 0 ? (
             userBabies.map(baby => (
-              <Baby key={baby.id} baby={baby} userId={id} />
+              <Baby key={baby.id} baby={baby} userId={id} isFollowing={user.id === loggedUser.id ? true : isFollowing} />
             ))
           ) : (
             <p>Käyttäjällä ei ole vielä vauvoja lisättynä.</p>

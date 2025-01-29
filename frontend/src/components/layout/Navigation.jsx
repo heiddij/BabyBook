@@ -10,6 +10,9 @@ const Navigation = ({ handleLogout, user }) => {
         <Link to={`/users/${user.id}`} className="font-semibold hover:font-bold">Omat sivut </Link>
       </div>
       <div className="p-4">
+        <Link to={'/users'} className="font-semibold hover:font-bold">Käyttäjät </Link>
+      </div>
+      <div className="p-4">
         <button onClick={handleLogout} className="font-semibold hover:font-bold">Kirjaudu ulos</button>
       </div>
     </nav>

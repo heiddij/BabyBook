@@ -19,9 +19,11 @@ const Post = ({ user, baby, post }) => {
   const loggedUser = useSelector((state) => state.user)
 
   useEffect(() => {
-    setLikes(post.likers.length)
-    const isLiked = post.likers.some((liker) => liker.id === loggedUser.id)
-    setSelected(isLiked)
+    if (post.likers) {
+      setLikes(post.likers.length)
+      const isLiked = post.likers.some((liker) => liker.id === loggedUser.id)
+      setSelected(isLiked)
+    }
   }, [loggedUser, post.likers])
 
   const handleLike = () => {

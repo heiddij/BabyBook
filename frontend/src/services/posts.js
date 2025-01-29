@@ -12,14 +12,8 @@ const getAll = async () => {
   return response.data
 }
 
-const getUserPosts = async () => {
-  const config = {
-    headers: {
-      Authorization: token
-    }
-  }
-
-  const response = await axios.get(`${baseUrl}/own`, config)
+const getUserPosts = async (userId) => {
+  const response = await axios.get(`${baseUrl}/${userId}`)
   return response.data
 }
 
@@ -29,7 +23,7 @@ const getPostsOfFollowedUsers = async () => {
       Authorization: token
     }
   }
-  const response = await axios.get(`${baseUrl}/following`, config)
+  const response = await axios.get(`${baseUrl}/user/following`, config)
   return response.data
 }
 

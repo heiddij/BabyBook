@@ -46,7 +46,7 @@ const App = () => {
           followService.setToken(user.token)
           commentService.setToken(user.token)
 
-          dispatch(initializeUserPosts())
+          //dispatch(initializeUserPosts())
           dispatch(initializeFollowedUsersPosts())
 
           setLoading(false)
@@ -87,7 +87,7 @@ const App = () => {
 
       dispatch(passUser(user))
       await dispatch(initializeFollowedUsersPosts())
-      await dispatch(initializeUserPosts())
+      // await dispatch(initializeUserPosts())
 
       return { success: true, error: null }
     } catch (exception) {

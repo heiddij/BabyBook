@@ -5,7 +5,11 @@ import { renderWithStore } from '../../utils/test-utils'
 import { followUser, unfollowUser } from '../../reducers/usersReducer'
 
 vi.mock('../baby/Baby', () => ({
-  default: ({ baby }) => <div>{baby.name}</div>,
+  default: ({ baby, userId, isFollowing }) => (
+    <div>
+      {baby.name} (userId: {userId}, isFollowing: {isFollowing ? 'true' : 'false'})
+    </div>
+  ),
 }))
 
 vi.mock('../baby/BabyForm', () => ({
@@ -50,7 +54,7 @@ describe('UserView Component', () => {
     })
 
     expect(screen.getByText('Käyttäjän User One vauvat:')).toBeInTheDocument()
-    expect(screen.getByText('Baby One')).toBeInTheDocument()
+    expect(screen.getByText('Baby One (userId: 1, isFollowing: false)')).toBeInTheDocument()
   })
 
   it('renders fallback when no babies exist', () => {

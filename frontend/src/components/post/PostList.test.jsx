@@ -41,8 +41,8 @@ describe('PostList Component', () => {
     const posts = screen.getAllByTestId('post-card')
     expect(posts).toHaveLength(2)
 
-    expect(posts[0]).toHaveTextContent('First baby post')
-    expect(posts[1]).toHaveTextContent('Second baby post')
+    expect(posts[0]).toHaveTextContent('Second baby post')
+    expect(posts[1]).toHaveTextContent('First baby post')
   })
 
   it('renders nothing if there are no posts for the given baby', () => {
