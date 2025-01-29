@@ -45,7 +45,7 @@ const UserForm = () => {
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
-        className="container"
+        className="container bg-my-pink"
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Input {...firstname_validation} />
@@ -66,10 +66,10 @@ const UserForm = () => {
           )}
           <button
             onClick={onSubmit}
-            className="flex items-center gap-1 p-5 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-800"
+            className="btn-primary"
           >
             <GrMail />
-                        Tallenna
+            Rekisteröidy
           </button>
         </div>
       </form>

@@ -9,10 +9,10 @@ const tokenExtractor = (req, res, next) => {
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET)
     } catch (error){
       console.log(error)
-      return res.status(401).json({ error: 'token invalid' })
+      return res.status(401).json({ error: 'Väärä token' })
     }
   } else {
-    return res.status(401).json({ error: 'token missing' })
+    return res.status(401).json({ error: 'Token puuttuu' })
   }
   next()
 }

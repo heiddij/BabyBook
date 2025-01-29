@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { likePost, unlikePost } from '../../reducers/postReducer'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import CommentList from '../comment/CommentList'
 
 const Post = ({ user, baby, post }) => {
   const [selected, setSelected] = useState(false)
@@ -69,6 +70,7 @@ const Post = ({ user, baby, post }) => {
           </ToggleButton>
           {likes > 0 && <Typography>{likes}</Typography>}
         </Box>
+        <CommentList post={post} />
       </Card>
     </>
   )

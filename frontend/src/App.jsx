@@ -14,6 +14,7 @@ import babyService from './services/babies'
 import postService from './services/posts'
 import followService from './services/follow'
 import loginService from './services/login'
+import commentService from './services/comments'
 import UserForm from './components/user/UserForm'
 import Navigation from './components/layout/Navigation'
 import Spinner from './components/ui/Spinner'
@@ -43,6 +44,7 @@ const App = () => {
           babyService.setToken(user.token)
           postService.setToken(user.token)
           followService.setToken(user.token)
+          commentService.setToken(user.token)
 
           dispatch(initializeUserPosts())
           dispatch(initializeFollowedUsersPosts())

@@ -49,13 +49,13 @@ describe('UserForm Component', () => {
     expect(screen.getByLabelText(/sukunimi/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/käyttäjänimi/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/salasana/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /tallenna/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /rekisteröidy/i })).toBeInTheDocument()
   })
 
   it('shows validation messages for invalid input', async () => {
     renderComponent()
 
-    fireEvent.click(screen.getByRole('button', { name: /tallenna/i }))
+    fireEvent.click(screen.getByRole('button', { name: /rekisteröidy/i }))
 
     await waitFor(() => {
       expect(screen.getByText(/kirjoita etunimi/i)).toBeInTheDocument()
@@ -80,7 +80,7 @@ describe('UserForm Component', () => {
     fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: user.username } })
     fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: user.password } })
 
-    fireEvent.click(screen.getByRole('button', { name: /tallenna/i }))
+    fireEvent.click(screen.getByRole('button', { name: /rekisteröidy/i }))
 
     await waitFor(() => {
       expect(mockDispatch).toHaveBeenCalled()
@@ -107,7 +107,7 @@ describe('UserForm Component', () => {
     fireEvent.input(screen.getByLabelText(/käyttäjänimi/i), { target: { value: 'testuser' } })
     fireEvent.input(screen.getByLabelText(/salasana/i), { target: { value: 'Password123!' } })
 
-    fireEvent.click(screen.getByRole('button', { name: /tallenna/i }))
+    fireEvent.click(screen.getByRole('button', { name: /rekisteröidy/i }))
 
     await waitFor(() => {
       expect(mockDispatch).toHaveBeenCalled()

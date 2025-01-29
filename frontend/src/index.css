@@ -17,7 +17,7 @@ h1 {
   @apply my-8 justify-self-center font-bold text-3xl
 }
 
-form {
+.my-form {
   @apply mx-auto sm:w-96 px-5 bg-my-pink py-8 rounded-md
 }
 

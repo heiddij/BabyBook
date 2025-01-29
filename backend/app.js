@@ -9,7 +9,7 @@ const babiesRouter = require('./controllers/babies')
 const loginRouter = require('./controllers/login')
 const postsRouter = require('./controllers/posts')
 const followRouter = require('./controllers/follow')
-
+const commentRouter = require('./controllers/comments')
 
 app.use(cors())
 app.use(express.json())
@@ -20,5 +20,6 @@ app.use('/api/babies', babiesRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/follow', followRouter)
+app.use('/api/comments', commentRouter)
 
 module.exports = app

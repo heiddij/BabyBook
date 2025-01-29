@@ -34,6 +34,7 @@ const LoginForm = ({ handleLogin }) => {
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
+        className="my-form"
       >
         <div className="grid gap-5 grid-cols-1">
           <Input {...usernamelogin_validation} />

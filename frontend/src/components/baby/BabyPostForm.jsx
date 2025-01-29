@@ -39,7 +39,7 @@ const BabyPostForm = ({ baby }) => {
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
-        className='my-4'
+        className='my-form my-4'
       >
         <h2>Tee julkaisu!</h2>
         <div className="grid gap-5 grid-cols-1">

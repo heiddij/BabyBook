@@ -4,13 +4,15 @@ import babyReducer from './reducers/babyReducer'
 import userReducer from './reducers/userReducer'
 import postReducer from './reducers/postReducer'
 import followedPostsReducer from './reducers/followedPostsReducer'
+import commentReducer from './reducers/commentReducer'
 
 const rootReducer = {
   users: usersReducer,
   user: userReducer,
   babies: babyReducer,
   posts: postReducer,
-  followedPosts: followedPostsReducer
+  followedPosts: followedPostsReducer,
+  comments: commentReducer
 }
 
 const store = configureStore({
