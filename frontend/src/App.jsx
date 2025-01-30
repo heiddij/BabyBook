@@ -6,7 +6,6 @@ import UserView from './components/user/UserView'
 import BabyView from './components/baby/BabyView'
 import { initializeUsers } from './reducers/usersReducer'
 import { initializeBabies } from './reducers/babyReducer'
-import { initializeUserPosts } from './reducers/postReducer'
 import { passUser } from './reducers/userReducer'
 import { initializeFollowedUsersPosts } from './reducers/followedPostsReducer'
 import LoginForm from './components/login/LoginForm'
@@ -15,11 +14,13 @@ import postService from './services/posts'
 import followService from './services/follow'
 import loginService from './services/login'
 import commentService from './services/comments'
+import messageService from './services/messages'
 import UserForm from './components/user/UserForm'
 import Navigation from './components/layout/Navigation'
 import Spinner from './components/ui/Spinner'
 import FollowedPostsList from './components/post/FollowedPostList'
 import { useNavigate } from 'react-router-dom'
+import ChatView from './components/chat/ChatView'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -45,6 +46,7 @@ const App = () => {
           postService.setToken(user.token)
           followService.setToken(user.token)
           commentService.setToken(user.token)
+          messageService.setToken(user.token)
 
           //dispatch(initializeUserPosts())
           dispatch(initializeFollowedUsersPosts())
@@ -84,6 +86,8 @@ const App = () => {
       babyService.setToken(user.token)
       postService.setToken(user.token)
       followService.setToken(user.token)
+      commentService.setToken(user.token)
+      messageService.setToken(user.token)
 
       dispatch(passUser(user))
       await dispatch(initializeFollowedUsersPosts())
@@ -101,6 +105,8 @@ const App = () => {
     babyService.setToken(null)
     postService.setToken(null)
     followService.setToken(null)
+    commentService.setToken(null)
+    messageService.setToken(null)
     dispatch(passUser(null))
     navigate('/login')
   }
@@ -115,6 +121,7 @@ const App = () => {
         <Route path="/users/:id/:babyId" element={<BabyView />} />
         <Route path="/registration" element={<UserForm />} />
         <Route path="/users" element={<UserList />} />
+        <Route path="/users/:id/chat" element={<ChatView />} />
       </Routes>
     </div>
   )

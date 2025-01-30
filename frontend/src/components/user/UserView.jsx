@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Baby from '../baby/Baby'
 import BabyForm from '../baby/BabyForm'
 import { useDispatch, useSelector } from 'react-redux'
@@ -75,6 +75,7 @@ const UserView = () => {
           ) : (
             <p>Käyttäjällä ei ole vielä vauvoja lisättynä.</p>
           )}
+          <Link to={`/users/${user.id}/chat`}>Chat</Link>
         </div>
         {user.id === loggedUser.id ?
           (
