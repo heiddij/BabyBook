@@ -19,13 +19,13 @@ describe('User API', () => {
       lastname: 'User',
       username: 'testuser',
       password: 'TestPassword123!'
-     })
+    })
     await User.create({
       firstname: 'Test2',
       lastname: 'User2',
       username: 'testuser2',
       password: 'TestPassword123!'
-     })
+    })
 
     const response = await request(app).get('/api/users')
 
@@ -42,7 +42,7 @@ describe('User API', () => {
       lastname: 'User3',
       username: 'testuser3',
       password: 'TestPassword123!'
-     })
+    })
 
     const response = await request(app).get(`/api/users/${user.id}`)
 
@@ -59,7 +59,7 @@ describe('User API', () => {
         lastname: 'User4',
         username: 'testuser4',
         password: 'TestPassword123!'
-       })
+      })
 
     expect(response.status).toBe(200)
     expect(response.body).toBe('testuser4')
@@ -71,7 +71,7 @@ describe('User API', () => {
       lastname: 'User5',
       username: 'testuser5',
       password: 'TestPassword123!'
-     })
+    })
 
     const response = await request(app)
       .post('/api/users')
@@ -80,7 +80,7 @@ describe('User API', () => {
         lastname: 'User6',
         username: 'testuser5',
         password: 'TestPassword123!'
-       })
+      })
 
     expect(response.status).toBe(400)
     expect(response.body.error).toBe('Käyttäjänimi on jo varattu')

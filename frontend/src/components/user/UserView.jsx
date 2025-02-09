@@ -75,7 +75,6 @@ const UserView = () => {
           ) : (
             <p>Käyttäjällä ei ole vielä vauvoja lisättynä.</p>
           )}
-          <Link to={`/users/${user.id}/chat`}>Chat</Link>
         </div>
         {user.id === loggedUser.id ?
           (

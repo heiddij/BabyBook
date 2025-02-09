@@ -1,29 +1,27 @@
-import globals from "globals"
-import js from '@eslint/js'
-import stylisticJs from '@stylistic/eslint-plugin-js'
-import jest from 'eslint-plugin-jest'
-
 /** @type {import('eslint').Linter.Config[]} */
-export default [
+const js = require('@eslint/js')
+const pluginJest = require('eslint-plugin-jest')
+const globals = require('globals')
+const stylisticJs = require('@stylistic/eslint-plugin-js')
+
+module.exports = [
   js.configs.recommended,
   {
-    files: ["**/*.js"],
-    ...jest.configs['flat/recommended'],
+    files: ['**/*.js'],
     languageOptions: {
-      sourceType: "commonjs",
+      sourceType: 'commonjs',
       globals: {
         ...globals.node,
-        jest: true,
+        ...pluginJest.environments.globals.globals
       },
-      ecmaVersion: "latest",
+      ecmaVersion: 'latest',
     },
-    ignores: ["dist/**"],
+    ignores: ['dist/**'],
     plugins: {
-      '@stylistic/js': stylisticJs
+      '@stylistic/js': stylisticJs,
+      jest: pluginJest
     },
     rules: {
-      ...jest.configs['flat/recommended'].rules,
-      'jest/prefer-expect-assertions': 'off',
       '@stylistic/js/indent': [
         'error',
         2

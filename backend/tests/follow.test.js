@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const { SECRET } = require('../util/config')
 
 describe('Follow API', () => {
-  let user1, user2, user1Token, user2Token
+  let user1, user2, user1Token
 
   beforeAll(async () => {
     await sequelize.sync({ force: true })
@@ -26,7 +26,6 @@ describe('Follow API', () => {
     })
 
     user1Token = jwt.sign({ id: user1.id, username: user1.username }, SECRET)
-    user2Token = jwt.sign({ id: user2.id, username: user2.username }, SECRET)
   })
 
   afterAll(async () => {

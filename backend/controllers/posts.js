@@ -31,7 +31,7 @@ router.get('/:userId', async (req, res) => {
               include: [
                 { model: User, as: 'likers' }
               ]
-             }
+            }
           ]
         }
       ]

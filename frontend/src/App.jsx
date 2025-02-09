@@ -21,6 +21,7 @@ import Spinner from './components/ui/Spinner'
 import FollowedPostsList from './components/post/FollowedPostList'
 import { useNavigate } from 'react-router-dom'
 import ChatView from './components/chat/ChatView'
+import ChatUserList from './components/chat/ChatUserList'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -121,8 +122,9 @@ const App = () => {
         <Route path="/users/:id/:babyId" element={<BabyView />} />
         <Route path="/registration" element={<UserForm />} />
         <Route path="/users" element={<UserList />} />
-        <Route path="/users/:id/chat" element={<ChatView />} />
+        <Route path="/chat/:id" element={<ChatView />} />
       </Routes>
+      { user && <ChatUserList /> }
     </div>
   )
 }
