@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { MdClose } from 'react-icons/md'
 import messageService from '../../services/messages'
 import { createWebSocket, sendMessage, setAllowReconnection } from '../../utils/websocket'
-import { formatDateTime } from '../../utils/formatDate'
+import ChatMessage from './ChatMessage'
 
 const ChatView = ({ receiver, onClose }) => {
   const [messages, setMessages] = useState([])
@@ -13,7 +13,7 @@ const ChatView = ({ receiver, onClose }) => {
   const loggedUser = useSelector((state) => state.user)
 
   useEffect(() => {
-    if (messagesEndRef.current) {
+    if (messagesEndRef.current?.scrollIntoView) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }
   }, [receiver, messages])
@@ -67,36 +67,26 @@ const ChatView = ({ receiver, onClose }) => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="absolute top-2 right-2">
+      <div className="absolute top-0 right-0">
         <button
           onClick={onClose}
           className="text-gray-500 hover:text-gray-800"
+          data-testid="chat-close-button"
         >
           <MdClose size={24} />
         </button>
       </div>
       <div className="flex-grow overflow-y-auto p-4 pt-8">
         {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`flex flex-col mb-3 max-w-[80%] ${
-              message.sender_id === loggedUser.id ? 'ml-auto bg-my-green' : 'mr-auto bg-my-pink'
-            } p-3 rounded-xl`}
-          >
-            <div className="flex justify-between text-xs text-gray-500">
-              <span className="font-semibold">{message.sender?.username}</span>
-              <span>{formatDateTime(message.createdAt)}</span>
-            </div>
-            <div className="mt-1">{message.content}</div>
-          </div>
+          <ChatMessage key={index} loggedUser={loggedUser} message={message} />
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="flex p-2 border-t">
+      <div className="flex border-t">
         <input
           type="text"
-          placeholder="Type a message"
+          placeholder="Kirjoita viesti"
           className="p-2 border rounded flex-grow"
           maxLength={200}
           value={messageInput}
@@ -109,9 +99,9 @@ const ChatView = ({ receiver, onClose }) => {
         />
         <button
           onClick={handleSendMessage}
-          className="p-2 bg-my-blue rounded ml-2 text-white"
+          className="px-2 bg-my-blue rounded text-white"
         >
-          Send
+          Lähetä
         </button>
       </div>
     </div>

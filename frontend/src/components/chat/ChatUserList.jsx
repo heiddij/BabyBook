@@ -26,6 +26,7 @@ const ChatUserList = () => {
     <div className="fixed bottom-4 right-4">
       <button
         className="bg-my-blue text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2"
+        data-testid="close-button"
         onClick={() => setIsOpen(!isOpen)}
       >
         <FiMessageCircle size={20} />
@@ -58,7 +59,10 @@ const ChatUserList = () => {
         </div>
       )}
       {isChatOpen && (
-        <div className="fixed bottom-4 right-72 bg-white shadow-lg p-3 rounded-lg w-80 border h-96 flex flex-col overflow-y-auto">
+        <div
+          className="fixed bottom-4 right-72 bg-white shadow-lg p-3 rounded-lg w-80 border h-96 flex flex-col overflow-y-auto"
+          data-testid="chat-window"
+        >
           <div className="flex-1 overflow-y-auto">
             <ChatView receiver={selectedUser} onClose={closeChat} />
           </div>

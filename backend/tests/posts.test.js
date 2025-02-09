@@ -5,7 +5,7 @@ const { User, Baby, Post } = require('../models')
 const { sequelize } = require('../util/db')
 const { SECRET } = require('../util/config')
 
-let user, token, baby
+let user, token, baby, post
 
 beforeAll(async () => {
   await sequelize.sync({ force: true })
@@ -27,7 +27,7 @@ beforeAll(async () => {
     userId: user.id,
   })
 
-  await Post.create({
+  post = await Post.create({
     post: 'First post',
     image: null,
     babyId: baby.id,
@@ -45,9 +45,9 @@ describe('POSTS API', () => {
     expect(response.body[0].post).toBe('First post')
   })
 
-  test('GET /api/posts/own - Fetch user’s own posts', async () => {
+  test('GET /api/posts/userId - Fetch user\'s own posts', async () => {
     const response = await request(app)
-      .get('/api/posts/own')
+      .get(`/api/posts/${user.id}`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
 
@@ -55,7 +55,7 @@ describe('POSTS API', () => {
     expect(response.body[0].post).toBe('First post')
   })
 
-  test('GET /api/posts/following - Fetch posts of followed users', async () => {
+  test('GET /api/posts/user/following - Fetch posts of followed users', async () => {
     const anotherUser = await User.create({
       firstname: 'Another',
       lastname: 'User',
@@ -80,7 +80,7 @@ describe('POSTS API', () => {
     await user.addFollowing(anotherUser)
 
     const response = await request(app)
-      .get('/api/posts/following')
+      .get('/api/posts/user/following')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
 
@@ -99,5 +99,87 @@ describe('POSTS API', () => {
 
     const posts = await Post.findAll()
     expect(posts).toHaveLength(3)
+  })
+
+  describe('LIKE/UNLIKE functionality', () => {
+    test('POST /posts/:id/like - should like a post successfully', async () => {
+      const response = await request(app)
+        .post(`/api/posts/${post.id}/like`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+
+      expect(response.body.likers).toHaveLength(1)
+      expect(response.body.likers[0].username).toBe(user.username)
+    })
+
+    test('POST /posts/:id/like - should return error if the user is not found', async () => {
+      const invalidToken = jwt.sign({ id: 9999, username: 'invaliduser' }, SECRET)
+
+      const response = await request(app)
+        .post(`/api/posts/${post.id}/like`)
+        .set('Authorization', `Bearer ${invalidToken}`)
+        .expect(400)
+
+      expect(response.body.error).toBe('Token puuttuu tai on virheellinen')
+    })
+
+    test('POST /posts/:id/like - should return error if the post is not found', async () => {
+      const nonExistentPostId = 9999
+
+      const response = await request(app)
+        .post(`/api/posts/${nonExistentPostId}/like`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
+
+      expect(response.body.error).toBe('Julkaisua ei löydy')
+    })
+
+    test('POST /posts/:id/like - should return error if the post is already liked', async () => {
+      await request(app)
+        .post(`/api/posts/${post.id}/like`)
+        .set('Authorization', `Bearer ${token}`)
+
+      const response = await request(app)
+        .post(`/api/posts/${post.id}/like`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400)
+
+      expect(response.body.error).toBe('Julkaisusta on jo tykätty')
+    })
+
+    test('DELETE /posts/:id/unlike - should unlike a post successfully', async () => {
+      await request(app)
+        .post(`/api/posts/${post.id}/like`)
+        .set('Authorization', `Bearer ${token}`)
+
+      const response = await request(app)
+        .delete(`/api/posts/${post.id}/unlike`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+
+      expect(response.body.likers).toHaveLength(0)
+    })
+
+    test('DELETE /posts/:id/unlike - should return error if the user is not found while unliking', async () => {
+      const invalidToken = jwt.sign({ id: 9999, username: 'invaliduser' }, SECRET)
+
+      const response = await request(app)
+        .delete(`/api/posts/${post.id}/unlike`)
+        .set('Authorization', `Bearer ${invalidToken}`)
+        .expect(400)
+
+      expect(response.body.error).toBe('Token puuttuu tai on virheellinen')
+    })
+
+    test('DELETE /posts/:id/unlike - should return error if the post is not found while unliking', async () => {
+      const nonExistentPostId = 9999
+
+      const response = await request(app)
+        .delete(`/api/posts/${nonExistentPostId}/unlike`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
+
+      expect(response.body.error).toBe('Julkaisua ei löydy')
+    })
   })
 })
