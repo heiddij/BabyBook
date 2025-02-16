@@ -22,6 +22,8 @@ import FollowedPostsList from './components/post/FollowedPostList'
 import { useNavigate } from 'react-router-dom'
 import ChatView from './components/chat/ChatView'
 import ChatUserList from './components/chat/ChatUserList'
+import Heading from './components/ui/Heading'
+import { disconnectWebSocket } from './utils/websocket'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -49,7 +51,6 @@ const App = () => {
           commentService.setToken(user.token)
           messageService.setToken(user.token)
 
-          //dispatch(initializeUserPosts())
           dispatch(initializeFollowedUsersPosts())
 
           setLoading(false)
@@ -92,7 +93,6 @@ const App = () => {
 
       dispatch(passUser(user))
       await dispatch(initializeFollowedUsersPosts())
-      // await dispatch(initializeUserPosts())
 
       return { success: true, error: null }
     } catch (exception) {
@@ -102,6 +102,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
+    disconnectWebSocket()
     window.localStorage.clear()
     babyService.setToken(null)
     postService.setToken(null)
@@ -115,6 +116,7 @@ const App = () => {
   return (
     <div>
       { user && <Navigation handleLogout={handleLogout} user={user} /> }
+      <Heading />
       <Routes>
         <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
         <Route path="/" element={user ? <FollowedPostsList /> : <Navigate replace to="/login" />} />

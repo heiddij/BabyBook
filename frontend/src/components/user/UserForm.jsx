@@ -40,13 +40,13 @@ const UserForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <h1>Rekisteröidy</h1>
       <form
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
         className="container bg-my-pink"
       >
+        <h2>Rekisteröidy</h2>
         <div className="grid gap-5 md:grid-cols-2">
           <Input {...firstname_validation} />
           <Input {...lastname_validation} />

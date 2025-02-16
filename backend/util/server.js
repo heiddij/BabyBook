@@ -4,7 +4,7 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
 const { Message, User } = require('../models')
-const { SECRET } = require('./config')
+const { SECRET, WEBSOCKET_PORT } = require('./config')
 
 const createServer = () => {
   const httpServer = http.createServer(async (req, res) => {
@@ -83,7 +83,7 @@ const createServer = () => {
     })
   })
 
-  httpServer.listen(3005, () => console.log('WebSocket server running on port 3005'))
+  httpServer.listen(WEBSOCKET_PORT, () => console.log(`WebSocket server running on port ${WEBSOCKET_PORT}`))
 }
 
 const fetchMessages = async (user1, user2) => {

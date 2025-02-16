@@ -29,7 +29,6 @@ const FollowedPostsList = () => {
 
   return (
     <>
-      <h1>BabyBook</h1>
       <div className="container mx-auto flex justify-center items-center flex-col">
         {sortedPosts.length > 0 ? (sortedPosts.map((post) =>
           <Post key={post.id} user={post.followingUser} baby={post.baby} post={post} />

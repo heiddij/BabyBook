@@ -9,7 +9,17 @@ const mockUser = {
   following: [
     { id: 2, username: 'user1' },
     { id: 3, username: 'user2' }
+  ],
+  followers: [
+    { id: 2, username: 'user1' }
   ]
+}
+
+const mockUser2 = {
+  id: 4,
+  username: 'user3',
+  following: [],
+  followers: []
 }
 
 const preloadedState = {
@@ -35,11 +45,22 @@ describe('ChatUserList', () => {
     expect(screen.queryByText('Keskustelut')).not.toBeInTheDocument()
   })
 
-  it('displays followed users in the user list', () => {
+  it('displays following users who are also followers in the user list', () => {
     renderWithStore(<ChatUserList />, { preloadedState })
     fireEvent.click(screen.getByText('Chat'))
     expect(screen.getByText('user1')).toBeInTheDocument()
-    expect(screen.getByText('user2')).toBeInTheDocument()
+    expect(screen.queryByText('user2')).not.toBeInTheDocument()
+  })
+
+  it('displays info text when there are no followed users', () => {
+    renderWithStore(<ChatUserList />, { preloadedState:
+      {
+        user: mockUser2,
+        users: [mockUser2, mockUser, ...mockUser.following]
+      }
+    })
+    fireEvent.click(screen.getByText('Chat'))
+    expect(screen.getByText('Ei seurattuja käyttäjiä. Kahden käyttäjän tulee seurata toisiaan voidakseen keskustella chatissa.')).toBeInTheDocument()
   })
 
   it('opens chat window when clicking a user', () => {

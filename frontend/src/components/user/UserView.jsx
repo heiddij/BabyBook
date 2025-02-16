@@ -8,9 +8,9 @@ import { followUser, unfollowUser } from '../../reducers/usersReducer'
 const UserView = () => {
   const id = useParams().id
   const users = useSelector((state) => state.users)
-  const user = users.find((u) => u.id === Number(id))
+  const user = users?.find((u) => u.id === Number(id))
   const babies = useSelector((state) => state.babies)
-  const userBabies = user ? babies.filter((b) => b.userId === user.id) : []
+  const userBabies = user ? babies?.filter((b) => b.userId === user.id) : []
   const loggedUser = useSelector((state) => state.user)
   const [addBaby, setAddBaby] = useState(false)
   const [addButtonText, setAddButtonText] = useState('Lisää vauva')
@@ -65,7 +65,7 @@ const UserView = () => {
 
   return (
     <div>
-      <h1>Käyttäjän {user.username} vauvat:</h1>
+      <h2>Käyttäjän {user.username} vauvat:</h2>
       <div className="container">
         <div className="grid gap-5 md:grid-cols-3">
           {userBabies.length > 0 ? (

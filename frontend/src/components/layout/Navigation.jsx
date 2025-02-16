@@ -1,19 +1,27 @@
 import { Link } from 'react-router-dom'
 
 const Navigation = ({ handleLogout, user }) => {
+  if (!user) return null
+
+  const linkStyle = 'font-semibold text-lg text-white hover:text-gray-300 transition duration-300 ease-in-out transform hover:scale-105'
+
   return (
-    <nav className="flex justify-end p-4 bg-my-blue">
-      <div className="p-4">
-        <Link to={'/'} className="font-semibold hover:font-bold">Etusivu </Link>
+    <nav className="flex justify-between items-center bg-my-blue shadow-lg rounded-b-lg p-6">
+      <div className="flex space-x-6">
+        <div>
+          <Link to={'/'} className={linkStyle}>Etusivu</Link>
+        </div>
+        <div>
+          <Link to={`/users/${user.id}`} className={linkStyle}>Omat sivut</Link>
+        </div>
+        <div>
+          <Link to={'/users'} className={linkStyle}>Käyttäjät</Link>
+        </div>
       </div>
-      <div className="p-4">
-        <Link to={`/users/${user.id}`} className="font-semibold hover:font-bold">Omat sivut </Link>
-      </div>
-      <div className="p-4">
-        <Link to={'/users'} className="font-semibold hover:font-bold">Käyttäjät </Link>
-      </div>
-      <div className="p-4">
-        <button onClick={handleLogout} className="font-semibold hover:font-bold">Kirjaudu ulos</button>
+      <div>
+        <button onClick={handleLogout} className={linkStyle}>
+          Kirjaudu ulos
+        </button>
       </div>
     </nav>
   )

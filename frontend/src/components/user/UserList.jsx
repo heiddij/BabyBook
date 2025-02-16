@@ -6,7 +6,7 @@ const UserList = () => {
 
   return (
     <div>
-      <h1>BabyBook käyttäjät</h1>
+      <h2>BabyBook käyttäjät</h2>
       <div className="container">
         <div className="grid gap-5 md:grid-cols-3">
           {users.length > 0 ? (users.map(user =>

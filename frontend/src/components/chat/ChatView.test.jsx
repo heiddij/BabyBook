@@ -71,7 +71,9 @@ describe('ChatView component', () => {
   })
 
   it('sends message when button is clicked', () => {
-    renderWithStore(<ChatView receiver={receiver} onClose={mockOnClose} />, {
+    const mockSocket = { send: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn() }
+
+    renderWithStore(<ChatView receiver={receiver} onClose={mockOnClose} socket={mockSocket} />, {
       preloadedState: { user: loggedUser }
     })
 
@@ -88,7 +90,9 @@ describe('ChatView component', () => {
   })
 
   it('sends message when Enter key is pressed', () => {
-    renderWithStore(<ChatView receiver={receiver} onClose={mockOnClose} />, {
+    const mockSocket = { send: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn() }
+
+    renderWithStore(<ChatView receiver={receiver} onClose={mockOnClose} socket={mockSocket} />, {
       preloadedState: { user: loggedUser }
     })
 

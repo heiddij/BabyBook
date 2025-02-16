@@ -30,6 +30,7 @@ const CommentForm = ({ handleCommentSubmit }) => {
           fullWidth
           multiline
           minRows={2}
+          inputProps={{ maxLength: 100 }}
           error={!!methods.formState.errors.comment}
           helperText={methods.formState.errors.comment?.message}
           sx={{

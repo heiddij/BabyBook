@@ -2,13 +2,12 @@ import { useEffect, useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { MdClose } from 'react-icons/md'
 import messageService from '../../services/messages'
-import { createWebSocket, sendMessage, setAllowReconnection } from '../../utils/websocket'
+import { createWebSocket, sendMessage } from '../../utils/websocket'
 import ChatMessage from './ChatMessage'
 
-const ChatView = ({ receiver, onClose }) => {
+const ChatView = ({ receiver, onClose, socket }) => {
   const [messages, setMessages] = useState([])
   const [messageInput, setMessageInput] = useState('')
-  const socket = useRef(null)
   const messagesEndRef = useRef(null)
   const loggedUser = useSelector((state) => state.user)
 
@@ -23,7 +22,7 @@ const ChatView = ({ receiver, onClose }) => {
       if (!loggedUser) return
 
       try {
-        const userMessages = await messageService.getUserMessages(receiver.id)
+        const userMessages = await messageService.getUserMessages(receiver?.id)
         setMessages(userMessages)
       } catch (error) {
         console.error('Error fetching messages:', error)
@@ -35,22 +34,23 @@ const ChatView = ({ receiver, onClose }) => {
 
   useEffect(() => {
     if (!loggedUser) {
-      setAllowReconnection(false)
       return
     }
 
-    setAllowReconnection(true)
-    socket.current = createWebSocket('ws://localhost:3005', {
-      onMessage: (msg) => setMessages((prevMessages) => [...prevMessages, msg])
-    })
+    const messageListener = (msg) => {
+      setMessages((prevMessages) => [...prevMessages, msg])
+    }
+
+    createWebSocket(socket, { onMessage: messageListener })
 
     return () => {
-      if (socket.current) {
-        socket.current.close()
-        console.log('Disconnected')
+      if (socket) {
+        socket.removeEventListener('message', messageListener)
       }
     }
-  }, [loggedUser])
+  }, [loggedUser, socket])
+
+  if (!loggedUser || !receiver) return null
 
   const handleSendMessage = () => {
     if (messageInput.trim() === '') return
@@ -61,7 +61,7 @@ const ChatView = ({ receiver, onClose }) => {
       content: messageInput
     }
 
-    sendMessage(socket.current, message)
+    sendMessage(socket, message)
     setMessageInput('')
   }
 

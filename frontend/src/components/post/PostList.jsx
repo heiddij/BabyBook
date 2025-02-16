@@ -5,24 +5,26 @@ import { initializeUserPosts } from '../../reducers/postReducer'
 
 const Posts = ({ baby, user }) => {
   const posts = useSelector((state) => state.posts)
-  const babyPosts = posts.filter((p) => p.babyId === baby.id)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(initializeUserPosts(user.id))
-  }, [user.id, dispatch])
+    if (user?.id) {
+      dispatch(initializeUserPosts(user.id))
+    }
+  }, [user?.id, dispatch])
 
-  const sortedPosts = babyPosts
-    ? [...babyPosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    : []
-
-  if (!babyPosts) {
+  if (!baby || !posts) {
     return null
   }
 
+  const babyPosts = posts.filter((p) => p.babyId === baby.id)
+  const sortedPosts = babyPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
   return (
     <>
-      {sortedPosts.map((post) => <Post key={post.id} user={user} baby={baby} post={post} />)}
+      {sortedPosts.map((post) => (
+        <Post key={post.id} user={user} baby={baby} post={post} />
+      ))}
     </>
   )
 }

@@ -19,12 +19,16 @@ const Post = ({ user, baby, post }) => {
   const loggedUser = useSelector((state) => state.user)
 
   useEffect(() => {
-    if (post.likers) {
+    if (post?.likers) {
       setLikes(post.likers.length)
-      const isLiked = post.likers.some((liker) => liker.id === loggedUser.id)
+      const isLiked = post.likers.some((liker) => liker.id === loggedUser?.id)
       setSelected(isLiked)
     }
-  }, [loggedUser, post.likers])
+  }, [loggedUser, post?.likers])
+
+  if (!user || !baby || !post || !loggedUser) {
+    return null
+  }
 
   const handleLike = () => {
     setSelected(true)
@@ -43,7 +47,7 @@ const Post = ({ user, baby, post }) => {
       <Card sx={{ width: 500, marginY: 4 }} data-testid="post-card">
         <CardContent sx={{ wordWrap: 'break-word', overflow: 'hidden' }}>
           <Box marginBottom={2}>
-            <h2 className='text-2xl'>{user.username}</h2>
+            <h3 className='text-2xl'>{user.username}</h3>
             <p>{formatDateTime(post.createdAt)}</p>
           </Box>
           <Box display="flex" alignItems="center" gap={1} marginBottom={2}>

@@ -1,36 +1,29 @@
-let allowReconnection = true
+let socket = null
 
-export const createWebSocket = (url, { onMessage }) => {
-  const socket = new WebSocket(url)
+export const getWebSocket = (url) => {
+  if (!socket || socket.readyState === WebSocket.CLOSED) {
+    socket = new WebSocket(url)
 
-  socket.onopen = () => {
-    console.log('Connected to WebSocket')
+    socket.onopen = () => console.log('WebSocket connected')
+    socket.onclose = () => console.log('WebSocket disconnected')
+    socket.onerror = (error) => console.error('WebSocket error:', error)
   }
+  return socket
+}
 
-  socket.onclose = () => {
-    allowReconnection && console.log('Disconnected, attempting to reconnect in 3 seconds...')
-
-    setTimeout(() => {
-      if (socket.readyState === WebSocket.CLOSED && allowReconnection) {
-        createWebSocket(url, { onMessage })
-      }
-    }, 3000)
-  }
-
-  socket.onmessage = (event) => {
+export const createWebSocket = (socket, { onMessage }) => {
+  socket.addEventListener('message', (event) => {
     if (!event.data) {
       console.error('Received empty message from server')
       return
     }
-
     try {
       const msg = JSON.parse(event.data)
       if (onMessage) onMessage(msg)
     } catch (error) {
       console.error('Error parsing message:', error, 'Received:', event.data)
     }
-  }
-
+  })
   return socket
 }
 
@@ -42,7 +35,10 @@ export const sendMessage = (socket, message) => {
   }
 }
 
-
-export const setAllowReconnection = (allow) => {
-  allowReconnection = allow
+export const disconnectWebSocket = () => {
+  if (socket) {
+    console.log('Disconnecting WebSocket...')
+    socket.close()
+    socket = null
+  }
 }

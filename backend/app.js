@@ -10,6 +10,7 @@ const loginRouter = require('./controllers/login')
 const postsRouter = require('./controllers/posts')
 const followRouter = require('./controllers/follow')
 const commentRouter = require('./controllers/comments')
+const messageRouter = require('./controllers/messages')
 
 app.use(cors())
 app.use(express.json())
@@ -21,5 +22,6 @@ app.use('/api/login', loginRouter)
 app.use('/api/posts', postsRouter)
 app.use('/api/follow', followRouter)
 app.use('/api/comments', commentRouter)
+app.use('/api/messages', messageRouter)
 
 module.exports = app

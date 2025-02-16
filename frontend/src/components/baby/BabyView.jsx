@@ -62,7 +62,7 @@ const BabyView = () => {
 
   return (
     <div>
-      <h1>Vauvakirja</h1>
+      <h2>Vauvakirja</h2>
       <div className="container mx-auto flex justify-center items-center flex-col">
         {baby.profilepic ? (
           <img
@@ -78,16 +78,16 @@ const BabyView = () => {
         <p className="text-lg">{baby.birthplace}</p>
         {isLoggedUser &&
           <div>
-            <button onClick={handleModifyBaby}
-              className="font-semibold hover:font-bold flex justify-self-center text-lg py-4"
-            >
-              {buttonText}
-            </button>
             <button onClick={handleClickOpen}
-              className="font-semibold bg-my-pink hover:font-bold flex justify-self-center text-lg p-4"
+              className="font-semibold bg-my-pink hover:scale-105 flex justify-self-center text-lg p-4"
               data-testid="open-dialog-button"
             >
-                  Poista
+              Poista
+            </button>
+            <button onClick={handleModifyBaby}
+              className="font-semibold hover:scale-105 flex justify-self-center text-lg py-4"
+            >
+              {buttonText}
             </button>
           </div>
         }
@@ -95,6 +95,9 @@ const BabyView = () => {
         <Dialog
           open={openDialog}
           onClose={handleClose}
+          disableAutoFocus
+          disableEnforceFocus
+          disableRestoreFocus
         >
           <DialogTitle id="alert-dialog-title">
             {`Poistetaanko vauva ${baby.firstname}?`}
@@ -107,7 +110,7 @@ const BabyView = () => {
               autoFocus
               data-testid="confirm-delete-button"
             >
-                Poista
+              Poista
             </Button>
           </DialogActions>
         </Dialog>

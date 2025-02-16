@@ -13,6 +13,10 @@ Message.init({
   content: {
     type: DataTypes.STRING(200),
     allowNull: false
+  },
+  seen: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
   sequelize,

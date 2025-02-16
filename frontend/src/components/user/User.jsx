@@ -4,6 +4,8 @@ import CardContent from '@mui/material/CardContent'
 import { Avatar, AvatarGroup, CardHeader } from '@mui/material'
 
 const User = ({ user }) => {
+  if (!user) return null
+
   return (
     <>
       <Link to={`/users/${user.id}`}>

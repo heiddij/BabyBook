@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import Input from '../form/Input'
 import { useForm } from 'react-hook-form'
 import { FormProvider } from 'react-hook-form'
 import { TbArrowBigRight } from 'react-icons/tb'
-import { usernamelogin_validation, passwordlogin_validation } from '../../utils/inputValidations'
 import { BsFillCheckSquareFill, BsFillXSquareFill } from 'react-icons/bs'
 import { Link, useNavigate } from 'react-router-dom'
+import Input from '../form/Input'
+import Heading from '../ui/Heading'
+import { usernamelogin_validation, passwordlogin_validation } from '../../utils/inputValidations'
 
 const LoginForm = ({ handleLogin }) => {
   const methods = useForm()
@@ -29,13 +30,13 @@ const LoginForm = ({ handleLogin }) => {
 
   return (
     <FormProvider {...methods}>
-      <h1>Kirjaudu sisään</h1>
       <form
         onSubmit={e => e.preventDefault()}
         noValidate
         autoComplete="off"
         className="my-form"
       >
+        <h2>Kirjaudu sisään</h2>
         <div className="grid gap-5 grid-cols-1">
           <Input {...usernamelogin_validation} />
           <Input {...passwordlogin_validation} />

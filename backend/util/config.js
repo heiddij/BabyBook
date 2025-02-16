@@ -7,5 +7,6 @@ const DATABASE_URL = process.env.NODE_ENV === 'test'
 module.exports = {
   DATABASE_URL: DATABASE_URL,
   PORT: process.env.PORT || 3001,
-  SECRET: process.env.SECRET
+  SECRET: process.env.SECRET,
+  WEBSOCKET_PORT: process.env.WEBSOCKET_PORT || 3005,
 }
