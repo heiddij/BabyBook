@@ -16,10 +16,13 @@ vi.mock('../baby/BabyForm', () => ({
   default: () => <div>Baby Form</div>,
 }))
 
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useParams: () => ({ id: '1' }),
-}))
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    useParams: () => ({ id: '1' }),
+  }
+})
 
 vi.mock('../../reducers/usersReducer', async (importOriginal) => {
   const actual = await importOriginal()
@@ -129,6 +132,6 @@ describe('UserView Component', () => {
       },
     })
 
-    expect(screen.getByText('Käyttäjää ei löydy')).toBeInTheDocument()
+    expect(screen.getByText('Ladataan käyttäjätietoja...')).toBeInTheDocument()
   })
 })

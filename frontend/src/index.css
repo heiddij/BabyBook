@@ -14,10 +14,6 @@ body {
   @apply w-full max-w-3xl p-5 mx-auto;
 }
 
-h1 {
-  @apply my-8 justify-self-center font-bold text-7xl;
-}
-
 h2 {
   @apply mb-6 justify-self-center font-bold text-2xl;
 }

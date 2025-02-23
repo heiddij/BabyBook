@@ -1,5 +1,8 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/api/posts'
+const baseUrl =
+    import.meta.env.MODE === 'test'
+      ? 'http://localhost:3001/api/posts'
+      : '/api/posts'
 
 let token = null
 

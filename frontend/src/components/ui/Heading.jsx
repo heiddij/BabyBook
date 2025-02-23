@@ -13,7 +13,7 @@ const Heading = () => {
   }, [headingText])
 
   return (
-    <h1 className="font-bold my-8 justify-self-center">
+    <h1 className="text-5xl lg:text-7xl font-bold my-8 justify-self-center">
       {headingText.split('').map((letter, index) => (
         <span
           key={index}

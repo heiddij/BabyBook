@@ -8,16 +8,20 @@ import Spinner from '../ui/Spinner'
 const FollowedPostsList = () => {
   const dispatch = useDispatch()
   const followedPosts = useSelector((state) => state.followedPosts)
+  const loggedUser = useSelector((state) => state.user)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!loggedUser) {
+      return
+    }
     const fetchData = async () => {
       await dispatch(initializeFollowedUsersPosts())
       setLoading(false)
     }
 
     fetchData()
-  }, [dispatch])
+  }, [dispatch, loggedUser])
 
   const sortedPosts = followedPosts
     ? [...followedPosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

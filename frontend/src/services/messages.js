@@ -1,6 +1,8 @@
 import axios from 'axios'
-const websocketBaseUrl = 'http://localhost:3005/messages'
-const baseUrl = 'http://localhost:3001/api/messages'
+const baseUrl =
+    import.meta.env.MODE === 'test'
+      ? 'http://localhost:3001/api/messages'
+      : '/api/messages'
 
 let token = null
 
@@ -15,7 +17,7 @@ const getUserMessages = async (receiverId) => {
     }
   }
 
-  const response = await axios.get(`${websocketBaseUrl}/${receiverId}`, config)
+  const response = await axios.get(`${baseUrl}/user/${receiverId}`, config)
   return response.data
 }
 

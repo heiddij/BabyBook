@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Baby from '../baby/Baby'
 import BabyForm from '../baby/BabyForm'
 import { useDispatch, useSelector } from 'react-redux'
@@ -30,6 +30,10 @@ const UserView = () => {
       }
     }
   }, [user, loggedUser])
+
+  if (!users || users.length === 0) {
+    return <p>Ladataan käyttäjätietoja...</p>
+  }
 
   if (!user) {
     return <p>Käyttäjää ei löydy</p>

@@ -10,14 +10,18 @@ import { getWebSocket } from '../../utils/websocket'
 const ChatUserList = () => {
   const loggedUser = useSelector((state) => state.user)
   const users = useSelector((state) => state.users)
-  const user = users.find((u) => u.id === loggedUser?.id)
+  const user = users?.find((u) => u.id === loggedUser?.id)
   const followedUsers = user?.following || []
-  const followers = user.followers || []
+  const followers = user?.followers || []
   const [isOpen, setIsOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [unreadMessages, setUnreadMessages] = useState({})
   const socket = useRef(null)
+  const WS_URL =
+    import.meta.env.MODE === 'development'
+      ? import.meta.env.VITE_WS_URL_DEV || 'ws://localhost:3001'
+      : import.meta.env. VITE_WS_URL_PROD || 'wss://babybook.fly.dev'
 
   const followerIds = new Set(followers.map(user => user.id))
   const mutualFollowers = followedUsers.filter(user => followerIds.has(user.id))
@@ -50,7 +54,7 @@ const ChatUserList = () => {
     if (!loggedUser) return
 
     if (!socket.current) {
-      socket.current = getWebSocket('ws://localhost:3005')
+      socket.current = getWebSocket(WS_URL)
     }
 
     const unreadListener = async (event) => {
@@ -80,7 +84,7 @@ const ChatUserList = () => {
     return () => {
       socket.current.removeEventListener('message', unreadListener)
     }
-  }, [loggedUser, selectedUser])
+  }, [loggedUser, selectedUser, WS_URL])
 
   if (!loggedUser) return null
 
@@ -101,7 +105,6 @@ const ChatUserList = () => {
       }
     }
   }
-
 
   const closeChat = () => {
     setIsChatOpen(false)
@@ -147,7 +150,7 @@ const ChatUserList = () => {
       )}
       {isChatOpen && (
         <div
-          className="fixed bottom-4 right-72 bg-white shadow-lg p-3 rounded-lg w-80 border h-96 flex flex-col overflow-y-auto"
+          className="fixed bottom-16 md:bottom-4 right-4 md:right-72 bg-white shadow-lg p-3 rounded-lg w-80 border h-96 flex flex-col overflow-y-auto"
           data-testid="chat-window"
         >
           <div className="flex-1 overflow-y-auto">
@@ -155,6 +158,7 @@ const ChatUserList = () => {
           </div>
         </div>
       )}
+
     </div>
   )
 }

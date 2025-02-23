@@ -5,7 +5,7 @@ import { renderWithStore } from '../../utils/test-utils'
 
 describe('PostList Component', () => {
   const mockBaby = { id: 1, firstname: 'Baby', profilepic: '/baby-pic.jpg' }
-  const mockUser = { username: 'testuser' }
+  const mockUser = { id: 1, username: 'testuser' }
   const mockPosts = [
     {
       id: 1,
@@ -35,7 +35,7 @@ describe('PostList Component', () => {
 
   it('renders only posts associated with the provided baby', () => {
     renderWithStore(<Posts baby={mockBaby} user={mockUser} />, {
-      preloadedState: { posts: mockPosts }
+      preloadedState: { posts: mockPosts, user: mockUser }
     })
 
     const posts = screen.getAllByTestId('post-card')
@@ -49,7 +49,7 @@ describe('PostList Component', () => {
     const mockEmptyBaby = { id: 99, firstname: 'NoBaby' }
 
     renderWithStore(<Posts baby={mockEmptyBaby} user={mockUser} />, {
-      preloadedState: { posts: mockPosts }
+      preloadedState: { posts: mockPosts, user: mockUser }
     })
 
     expect(screen.queryByTestId('post-card')).not.toBeInTheDocument()
@@ -57,7 +57,7 @@ describe('PostList Component', () => {
 
   it('renders all details for each baby post', () => {
     renderWithStore(<Posts baby={mockBaby} user={mockUser} />, {
-      preloadedState: { posts: [mockPosts[0]] }
+      preloadedState: { posts: [mockPosts[0]], user: mockUser }
     })
 
     const post = screen.getByTestId('post-card')

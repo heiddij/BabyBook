@@ -74,7 +74,6 @@ export const followUser = (followerId, followingId) => {
   }
 }
 
-
 export const unfollowUser = (followerId, followingId) => {
   return async (dispatch) => {
     await followService.unfollow(followingId)

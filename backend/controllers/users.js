@@ -25,7 +25,16 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const user = await User.create(req.body)
-    res.json(user.username)
+    const userToSend = await User.findByPk(user.id
+      , {
+        include: [
+          { model: Baby },
+          { model: User, as: 'followers' },
+          { model: User, as: 'following' }
+        ]
+      }
+    )
+    res.json(userToSend)
   } catch(error) {
     console.error(error)
     if (error.name === 'SequelizeUniqueConstraintError') {

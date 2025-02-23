@@ -9,8 +9,9 @@ const Message = require('./message')
 User.hasMany(Baby)
 Baby.belongsTo(User)
 
-Baby.hasMany(Post)
+Baby.hasMany(Post, { onDelete: 'CASCADE', hooks: true })
 Post.belongsTo(Baby)
+
 
 User.belongsToMany(User, { 
   through: Follow, 

@@ -1,35 +1,36 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { useEffect, useState, lazy, Suspense, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import UserList from './components/user/UserList'
-import UserView from './components/user/UserView'
-import BabyView from './components/baby/BabyView'
 import { initializeUsers } from './reducers/usersReducer'
 import { initializeBabies } from './reducers/babyReducer'
 import { passUser } from './reducers/userReducer'
 import { initializeFollowedUsersPosts } from './reducers/followedPostsReducer'
-import LoginForm from './components/login/LoginForm'
 import babyService from './services/babies'
 import postService from './services/posts'
 import followService from './services/follow'
 import loginService from './services/login'
 import commentService from './services/comments'
 import messageService from './services/messages'
-import UserForm from './components/user/UserForm'
+import { disconnectWebSocket } from './utils/websocket'
+
+const UserList = lazy(() => import('./components/user/UserList'))
+const UserView = lazy(() => import('./components/user/UserView'))
+const LoginForm = lazy(() => import('./components/login/LoginForm'))
+const BabyView = lazy(() => import('./components/baby/BabyView'))
+const UserForm = lazy(() => import('./components/user/UserForm'))
+const FollowedPostsList = lazy(() => import('./components/post/FollowedPostList'))
+
 import Navigation from './components/layout/Navigation'
 import Spinner from './components/ui/Spinner'
-import FollowedPostsList from './components/post/FollowedPostList'
-import { useNavigate } from 'react-router-dom'
-import ChatView from './components/chat/ChatView'
-import ChatUserList from './components/chat/ChatUserList'
 import Heading from './components/ui/Heading'
-import { disconnectWebSocket } from './utils/websocket'
+import ChatUserList from './components/chat/ChatUserList'
 
 const App = () => {
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user)
+  const loggedUser = useSelector((state) => state.user)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+  const intervalRef = useRef(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,11 +56,9 @@ const App = () => {
 
           setLoading(false)
 
-          const interval = setInterval(() => {
+          intervalRef.current = setInterval(() => {
             dispatch(initializeFollowedUsersPosts())
           }, 100000)
-
-          return () => clearInterval(interval)
         } else {
           setLoading(false)
         }
@@ -70,6 +69,12 @@ const App = () => {
     }
 
     fetchData()
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
   }, [dispatch])
 
   if (loading) {
@@ -115,18 +120,19 @@ const App = () => {
 
   return (
     <div>
-      { user && <Navigation handleLogout={handleLogout} user={user} /> }
+      {loggedUser && <Navigation handleLogout={handleLogout} user={loggedUser} />}
       <Heading />
-      <Routes>
-        <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
-        <Route path="/" element={user ? <FollowedPostsList /> : <Navigate replace to="/login" />} />
-        <Route path="/users/:id" element={<UserView />} />
-        <Route path="/users/:id/:babyId" element={<BabyView />} />
-        <Route path="/registration" element={<UserForm />} />
-        <Route path="/users" element={<UserList />} />
-        <Route path="/chat/:id" element={<ChatView />} />
-      </Routes>
-      { user && <ChatUserList /> }
+      <Suspense fallback={<Spinner />}>
+        <Routes>
+          <Route path="/login" element={<LoginForm handleLogin={handleLogin} />} />
+          <Route path="/" element={loggedUser ? <FollowedPostsList /> : <Navigate replace to="/login" />} />
+          <Route path="/users/:id" element={<UserView />} />
+          <Route path="/users/:id/:babyId" element={<BabyView />} />
+          <Route path="/registration" element={<UserForm />} />
+          <Route path="/users" element={<UserList />} />
+        </Routes>
+      </Suspense>
+      {loggedUser && <ChatUserList />}
     </div>
   )
 }

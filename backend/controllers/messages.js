@@ -1,6 +1,33 @@
 const router = require('express').Router()
+const { Op } = require('sequelize')
 const { Message, User } = require('../models')
 const tokenExtractor = require('../middlewares/tokenExtractor')
+
+router.get('/user/:id', tokenExtractor, async (req, res) => {
+  try {
+    const sender = await User.findByPk(req.decodedToken.id)
+    const receiver = await User.findByPk(req.params.id)
+
+    if (!sender || !receiver) {
+      return res.status(404).json({ error: 'Käyttäjää ei löydy' })
+    }
+
+    const messages = await Message.findAll({
+      where: {
+        [Op.or]: [
+          { sender_id: sender.id, receiver_id: receiver.id },
+          { sender_id: receiver.id, receiver_id: sender.id }
+        ]
+      },
+      order: [['createdAt', 'ASC']],
+      include: [{ model: User, as: 'sender' }]
+    })
+    res.json(messages)
+  } catch (error) {
+    console.error('Error handling request:', error)
+    res.status(500).json({ error: 'Server Error' })
+  }
+})
 
 router.get('/unread', tokenExtractor, async (req, res) => {
   try {

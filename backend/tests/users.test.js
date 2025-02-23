@@ -62,7 +62,7 @@ describe('User API', () => {
       })
 
     expect(response.status).toBe(200)
-    expect(response.body).toBe('testuser4')
+    expect(response.body.username).toBe('testuser4')
   })
 
   test('POST /api/users - should return 400 when username already exists', async () => {

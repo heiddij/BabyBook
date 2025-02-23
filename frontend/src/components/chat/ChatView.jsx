@@ -10,6 +10,11 @@ const ChatView = ({ receiver, onClose, socket }) => {
   const [messageInput, setMessageInput] = useState('')
   const messagesEndRef = useRef(null)
   const loggedUser = useSelector((state) => state.user)
+  const receiverRef = useRef(receiver)
+
+  useEffect(() => {
+    receiverRef.current = receiver
+  }, [receiver])
 
   useEffect(() => {
     if (messagesEndRef.current?.scrollIntoView) {
@@ -38,7 +43,9 @@ const ChatView = ({ receiver, onClose, socket }) => {
     }
 
     const messageListener = (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg])
+      if (msg.sender_id === receiverRef.current?.id || msg.sender_id === loggedUser.id) {
+        setMessages((prevMessages) => [...prevMessages, msg])
+      }
     }
 
     createWebSocket(socket, { onMessage: messageListener })
@@ -76,8 +83,8 @@ const ChatView = ({ receiver, onClose, socket }) => {
           <MdClose size={24} />
         </button>
       </div>
-      <div className="flex-grow overflow-y-auto p-4 pt-8">
-        {messages.map((message, index) => (
+      <div className="flex-grow overflow-y-auto p-4 pt-8 mt-3">
+        {messages?.map((message, index) => (
           <ChatMessage key={index} loggedUser={loggedUser} message={message} />
         ))}
         <div ref={messagesEndRef} />

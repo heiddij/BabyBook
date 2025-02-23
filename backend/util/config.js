@@ -8,5 +8,4 @@ module.exports = {
   DATABASE_URL: DATABASE_URL,
   PORT: process.env.PORT || 3001,
   SECRET: process.env.SECRET,
-  WEBSOCKET_PORT: process.env.WEBSOCKET_PORT || 3005,
 }

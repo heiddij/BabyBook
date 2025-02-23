@@ -58,37 +58,25 @@ describe('FollowedPostsList Component', () => {
     }
   ]
 
+  const mockLoggedUser = { id: 1, username: 'user1' }
+
   it('renders the Spinner while loading', () => {
     initializeFollowedUsersPosts.mockReturnValue(() => new Promise(() => {}))
 
     act(() => {
       renderWithStore(<FollowedPostList />, {
-        preloadedState: { followedPosts: [] }
+        preloadedState: { followedPosts: [], user: mockLoggedUser }
       })
     })
 
     expect(screen.getByText('Loading...')).toBeInTheDocument()
   })
 
-  it('renders the heading "BabyBook"', async () => {
-    initializeFollowedUsersPosts.mockResolvedValueOnce(mockFollowedPosts)
-
-    renderWithStore(<FollowedPostList />, {
-      preloadedState: { followedPosts: mockFollowedPosts }
-    })
-
-    await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
-    })
-
-    expect(screen.getByText('BabyBook')).toBeInTheDocument()
-  })
-
   it('renders the followed posts in descending order by date', async () => {
     initializeFollowedUsersPosts.mockResolvedValueOnce(mockFollowedPosts)
 
     renderWithStore(<FollowedPostList />, {
-      preloadedState: { followedPosts: mockFollowedPosts }
+      preloadedState: { followedPosts: mockFollowedPosts, user: mockLoggedUser }
     })
 
     await waitFor(() => {
@@ -106,7 +94,7 @@ describe('FollowedPostsList Component', () => {
     initializeFollowedUsersPosts.mockResolvedValue([])
 
     renderWithStore(<FollowedPostList />, {
-      preloadedState: { followedPosts: [] }
+      preloadedState: { followedPosts: [], user: mockLoggedUser }
     })
 
     await waitFor(() => {
@@ -120,7 +108,7 @@ describe('FollowedPostsList Component', () => {
     initializeFollowedUsersPosts.mockResolvedValueOnce(mockFollowedPosts)
 
     renderWithStore(<FollowedPostList />, {
-      preloadedState: { followedPosts: [mockFollowedPosts[0]] }
+      preloadedState: { followedPosts: [mockFollowedPosts[0]], user: mockLoggedUser }
     })
 
     await waitFor(() => {

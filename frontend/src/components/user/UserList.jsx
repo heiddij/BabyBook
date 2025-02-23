@@ -4,6 +4,10 @@ import { useSelector } from 'react-redux'
 const UserList = () => {
   const users = useSelector((state) => state.users)
 
+  if (!users) {
+    return <p>Babybookilla ei ole vielä käyttäjiä!</p>
+  }
+
   return (
     <div>
       <h2>BabyBook käyttäjät</h2>
