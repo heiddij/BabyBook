@@ -15,7 +15,7 @@ Käyttäjät voivat myös keskustella toistensa kanssa reaaliajassa sovelluksen 
 
 ## Testikäyttäjä
 - Käyttäjätunnus: testuser
-- Salasana: Testi123!
+- Salasana: Test123!
 
 ## Linkit
 - [Tuntikirjanpito](./tuntikirjanpito.md)
